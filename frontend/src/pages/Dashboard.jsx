@@ -49,7 +49,7 @@ export default function Dashboard() {
   ]
 
   return (
-    <div style={{ minHeight:'100vh', background:'#f8f9fa' }}>
+    <div style={{ minHeight:'100vh' }}>
       <Navbar />
       <div style={styles.page}>
 
@@ -61,8 +61,8 @@ export default function Dashboard() {
               {role === 'admin'
                 ? 'Tienes acceso completo para supervisar clientes, empleados, proyectos y tareas.'
                 : role === 'client'
-                  ? 'Puedes crear tareas y consultar el avance de tus solicitudes.'
-                  : 'Puedes visualizar tus tareas asignadas y registrar el avance realizado.'}
+                  ? 'Puedes consultar el avance de tus proyectos y generar reportes.'
+                  : 'Puedes visualizar tus tareas asignadas y actualizar su estado.'}
             </p>
           </div>
           <span style={{...styles.roleBadge, background: role==='admin'?'#e8f0fe':'#e6f4ea', color: role==='admin'?'#1a73e8':'#0f9d58'}}>
@@ -108,19 +108,19 @@ export default function Dashboard() {
 }
 
 const styles = {
-  page:         { padding:'2rem', maxWidth:1100, margin:'0 auto' },
-  welcome:      { background:'#fff', borderRadius:12, padding:'1.5rem 2rem', marginBottom:24, boxShadow:'0 2px 8px #0001', display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:12 },
-  welcomeTitle: { margin:'0 0 6px', fontSize:22, fontWeight:700 },
-  welcomeSub:   { margin:0, color:'#666', fontSize:14 },
-  roleBadge:    { padding:'8px 16px', borderRadius:20, fontSize:13, fontWeight:600 },
-  grid:         { display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(220px,1fr))', gap:16, marginBottom:24 },
-  card:         { background:'#fff', borderRadius:10, padding:'1.25rem 1.5rem', cursor:'pointer', boxShadow:'0 2px 8px #0001', transition:'transform .15s' },
-  cardLabel:    { margin:'0 0 4px', fontSize:13, color:'#888', fontWeight:500 },
-  cardValue:    { margin:'0 0 4px', fontSize:32, fontWeight:700 },
-  cardDesc:     { margin:0, fontSize:12, color:'#aaa' },
-  cardIcon:     { width:52, height:52, borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:24 },
-  section:      { background:'#fff', borderRadius:12, padding:'1.5rem 2rem', boxShadow:'0 2px 8px #0001' },
-  sectionTitle: { margin:'0 0 16px', fontSize:16, fontWeight:600, color:'#333' },
+  page:         { padding:'2rem', maxWidth:1180, margin:'0 auto' },
+  welcome:      { background:'linear-gradient(135deg, #111827 0%, #1e3a8a 100%)', color:'#fff', borderRadius:12, padding:'1.75rem 2rem', marginBottom:24, boxShadow:'0 18px 42px rgba(15,23,42,0.18)', display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:12 },
+  welcomeTitle: { margin:'0 0 6px', fontSize:24, fontWeight:800, letterSpacing:0 },
+  welcomeSub:   { margin:0, color:'rgba(255,255,255,0.78)', fontSize:14, maxWidth:650 },
+  roleBadge:    { padding:'8px 14px', borderRadius:8, fontSize:13, fontWeight:750, border:'1px solid rgba(255,255,255,0.28)' },
+  grid:         { display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(230px,1fr))', gap:16, marginBottom:24 },
+  card:         { background:'#fff', borderRadius:10, padding:'1.35rem 1.45rem', cursor:'pointer', boxShadow:'0 10px 28px rgba(15,23,42,0.08)', border:'1px solid #e5e7eb', transition:'transform .15s, box-shadow .15s' },
+  cardLabel:    { margin:'0 0 4px', fontSize:12, color:'#64748b', fontWeight:750, textTransform:'uppercase' },
+  cardValue:    { margin:'0 0 4px', fontSize:34, fontWeight:850, letterSpacing:0 },
+  cardDesc:     { margin:0, fontSize:12, color:'#94a3b8' },
+  cardIcon:     { width:50, height:50, borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', fontSize:22 },
+  section:      { background:'#fff', borderRadius:10, padding:'1.5rem 1.75rem', boxShadow:'0 10px 28px rgba(15,23,42,0.08)', border:'1px solid #e5e7eb' },
+  sectionTitle: { margin:'0 0 16px', fontSize:16, fontWeight:750, color:'#172033' },
   actions:      { display:'flex', gap:12, flexWrap:'wrap' },
-  actionBtn:    { padding:'10px 20px', color:'#fff', border:'none', borderRadius:8, cursor:'pointer', fontSize:14, fontWeight:500 },
+  actionBtn:    { padding:'10px 18px', color:'#fff', border:'none', borderRadius:8, cursor:'pointer', fontSize:14, fontWeight:750, boxShadow:'0 8px 18px rgba(15,23,42,0.12)' },
 }

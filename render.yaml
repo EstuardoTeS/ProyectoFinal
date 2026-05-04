@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: techsolutions-backend
+    env: python
+    rootDir: techsolutions
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn config.wsgi:application
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: CORS_ALLOW_ALL_ORIGINS
+        value: "False"

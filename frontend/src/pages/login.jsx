@@ -20,7 +20,8 @@ export default function Login() {
       localStorage.setItem('token',    res.data.access)
       localStorage.setItem('role',     res.data.role ?? 'user')
       localStorage.setItem('username', username)
-      navigate('/dashboard')
+      const role = res.data.role
+      navigate(role === 'employee' ? '/tasks' : role === 'client' ? '/projects' : '/dashboard')
     } catch {
       setMsg({ text:'Usuario o contraseña incorrectos', ok:false })
     }
@@ -98,16 +99,16 @@ export default function Login() {
 }
 
 const styles = {
-  bg:        { minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', background:'#f0f2f5' },
-  card:      { background:'#fff', borderRadius:12, padding:'2.5rem 2rem', width:360, boxShadow:'0 4px 24px #0001' },
-  title:     { margin:0, fontSize:26, fontWeight:700, color:'#1a73e8', textAlign:'center' },
-  sub:       { margin:'4px 0 20px', fontSize:13, color:'#888', textAlign:'center' },
-  tabs:      { display:'flex', marginBottom:20, borderBottom:'2px solid #f0f0f0' },
-  tab:       { flex:1, padding:'10px', background:'none', border:'none', cursor:'pointer', fontSize:14, color:'#888', fontWeight:500 },
-  tabActive: { color:'#1a73e8', borderBottom:'2px solid #1a73e8', marginBottom:-2 },
-  alert:     { padding:'10px 14px', borderRadius:7, fontSize:13, marginBottom:12 },
+  bg:        { minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', padding:24 },
+  card:      { background:'#fff', borderRadius:12, padding:'2.25rem 2rem', width:390, boxShadow:'0 24px 60px rgba(15,23,42,0.18)', border:'1px solid #e5e7eb' },
+  title:     { margin:0, fontSize:28, fontWeight:850, color:'#111827', textAlign:'center', letterSpacing:0 },
+  sub:       { margin:'6px 0 22px', fontSize:13, color:'#64748b', textAlign:'center' },
+  tabs:      { display:'flex', marginBottom:20, background:'#f1f5f9', padding:4, borderRadius:9 },
+  tab:       { flex:1, padding:'9px', background:'transparent', border:'none', cursor:'pointer', fontSize:13, color:'#64748b', fontWeight:750, borderRadius:7 },
+  tabActive: { color:'#111827', background:'#fff', boxShadow:'0 2px 8px rgba(15,23,42,0.08)' },
+  alert:     { padding:'10px 14px', borderRadius:8, fontSize:13, marginBottom:12, border:'1px solid transparent' },
   form:      { display:'flex', flexDirection:'column', gap:10 },
-  label:     { fontSize:13, color:'#555', fontWeight:500 },
-  input:     { padding:'10px 12px', borderRadius:8, border:'1px solid #ddd', fontSize:14, outline:'none' },
-  btn:       { marginTop:8, padding:11, borderRadius:8, background:'#1a73e8', color:'#fff', fontWeight:600, fontSize:15, border:'none', cursor:'pointer' },
+  label:     { fontSize:13, color:'#475569', fontWeight:750 },
+  input:     { padding:'10px 12px', borderRadius:8, border:'1px solid #d7dee8', fontSize:14, outline:'none', background:'#fff' },
+  btn:       { marginTop:8, padding:11, borderRadius:8, background:'#2563eb', color:'#fff', fontWeight:750, fontSize:15, border:'none', cursor:'pointer', boxShadow:'0 10px 20px rgba(37,99,235,0.22)' },
 }

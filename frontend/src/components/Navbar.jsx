@@ -15,7 +15,7 @@ export default function Navbar() {
   const links = [
     { to:'/dashboard', label:'🏠 Inicio' },
     ...(role === 'admin' ? [{ to:'/clients', label:'👥 Clientes' }] : []),
-    ...(role !== 'employee' ? [{ to:'/projects', label:'📁 Proyectos' }] : []),
+    ...(role !== 'employee' ? [{ to:'/projects', label: role === 'client' ? '📁 Mis proyectos' : '📁 Proyectos' }] : []),
     { to:'/tasks',     label:'✅ Tareas' },
     ...(role === 'admin' ? [{ to:'/users', label:'👷 Empleados' }] : []),
     ...(role === 'admin' ? [{ to:'http://127.0.0.1:8000/admin/', label:'🔧 Panel Admin', external:true }] : []),
@@ -47,14 +47,14 @@ export default function Navbar() {
 }
 
 const styles = {
-  nav:       { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 2rem', height:60, background:'#1a73e8', color:'#fff', position:'sticky', top:0, zIndex:100, boxShadow:'0 2px 8px #0002' },
+  nav:       { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 2rem', height:68, background:'#111827', color:'#fff', position:'sticky', top:0, zIndex:100, boxShadow:'0 16px 36px rgba(15,23,42,0.18)' },
   brand:     { display:'flex', alignItems:'baseline', gap:6 },
-  brandName: { fontWeight:700, fontSize:20 },
-  brandSub:  { fontSize:11, background:'rgba(255,255,255,0.25)', padding:'2px 6px', borderRadius:4 },
-  links:     { display:'flex', gap:4 },
-  link:      { color:'rgba(255,255,255,0.85)', textDecoration:'none', fontSize:13, fontWeight:500, padding:'6px 12px', borderRadius:6, transition:'background .15s' },
-  linkActive:{ background:'rgba(255,255,255,0.2)', color:'#fff' },
+  brandName: { fontWeight:800, fontSize:20, letterSpacing:0 },
+  brandSub:  { fontSize:11, background:'#2563eb', padding:'3px 7px', borderRadius:6, fontWeight:700 },
+  links:     { display:'flex', gap:6, alignItems:'center' },
+  link:      { color:'rgba(255,255,255,0.78)', textDecoration:'none', fontSize:13, fontWeight:650, padding:'9px 12px', borderRadius:8, transition:'background .15s, color .15s' },
+  linkActive:{ background:'rgba(255,255,255,0.12)', color:'#fff' },
   right:     { display:'flex', alignItems:'center', gap:12 },
-  userInfo:  { fontSize:13, color:'rgba(255,255,255,0.9)' },
-  logout:    { background:'rgba(255,255,255,0.15)', border:'1px solid rgba(255,255,255,0.3)', color:'#fff', padding:'6px 14px', borderRadius:6, cursor:'pointer', fontSize:13 },
+  userInfo:  { fontSize:13, color:'rgba(255,255,255,0.88)', background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.12)', padding:'7px 10px', borderRadius:9 },
+  logout:    { background:'#ef4444', border:'1px solid rgba(255,255,255,0.12)', color:'#fff', padding:'8px 14px', borderRadius:8, cursor:'pointer', fontSize:13, fontWeight:700, boxShadow:'0 8px 16px rgba(239,68,68,0.22)' },
 }

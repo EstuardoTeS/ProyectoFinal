@@ -7,8 +7,8 @@ class Task(models.Model):
     STATUS   = [
         ('pending',     'Pendiente'),
         ('in_progress', 'En progreso'),
-        ('review',      'En revisión'),
-        ('completed',   'Completada'),
+        ('completed',   'Finalizada'),
+        ('cancelled',   'Cancelada'),
     ]
 
     title       = models.CharField(max_length=200)
