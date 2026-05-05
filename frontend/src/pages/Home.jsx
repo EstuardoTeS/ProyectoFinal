@@ -27,7 +27,6 @@ export default function Home() {
         <nav style={styles.nav}>
           <a href="#servicios" style={styles.navLink}>Servicios</a>
           <a href="#empresa" style={styles.navLink}>Empresa</a>
-          <a href="#contacto" style={styles.navLink}>Contacto</a>
           <Link to="/login" style={styles.loginBtn}>Iniciar sesión</Link>
         </nav>
       </header>
@@ -104,25 +103,25 @@ export default function Home() {
 
 const styles = {
   shell: { minHeight:'100vh', background:'#f8fafc' },
-  topbar: { height:76, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 2rem', background:'rgba(255,255,255,0.92)', borderBottom:'1px solid #e5e7eb', position:'sticky', top:0, zIndex:20, backdropFilter:'blur(14px)' },
+  topbar: { minHeight:72, display:'flex', alignItems:'center', justifyContent:'space-between', gap:10, padding:'0.75rem clamp(1rem, 4vw, 2rem)', background:'rgba(255,255,255,0.94)', borderBottom:'1px solid #e5e7eb', position:'sticky', top:0, zIndex:20, backdropFilter:'blur(14px)', maxWidth:'100vw', overflow:'hidden' },
   brand: { display:'flex', alignItems:'center', gap:12, textDecoration:'none', color:'#111827' },
-  brandMark: { width:42, height:42, borderRadius:9, background:'#111827', color:'#fff', display:'grid', placeItems:'center', fontWeight:850 },
-  brandName: { display:'block', fontSize:17, fontWeight:850 },
+  brandMark: { width:42, height:42, minWidth:42, borderRadius:9, background:'#111827', color:'#fff', display:'grid', placeItems:'center', fontWeight:850 },
+  brandName: { display:'block', fontSize:'clamp(15px, 4vw, 17px)', fontWeight:850 },
   brandSub: { display:'block', color:'#64748b', fontSize:12, marginTop:1 },
-  nav: { display:'flex', alignItems:'center', gap:18 },
-  navLink: { color:'#475569', textDecoration:'none', fontSize:14, fontWeight:750 },
-  loginBtn: { color:'#fff', background:'#2563eb', textDecoration:'none', padding:'10px 15px', borderRadius:8, fontSize:14, fontWeight:800, boxShadow:'0 10px 20px rgba(37,99,235,0.22)' },
-  hero: { minHeight:'calc(100vh - 76px)', position:'relative', display:'flex', alignItems:'center', overflow:'hidden' },
+  nav: { display:'flex', alignItems:'center', gap:'clamp(8px, 2vw, 18px)', minWidth:0 },
+  navLink: { color:'#475569', textDecoration:'none', fontSize:'clamp(12px, 3.2vw, 14px)', fontWeight:750, whiteSpace:'nowrap' },
+  loginBtn: { color:'#fff', background:'#2563eb', textDecoration:'none', padding:'10px 13px', borderRadius:8, fontSize:'clamp(12px, 3.2vw, 14px)', fontWeight:800, boxShadow:'0 10px 20px rgba(37,99,235,0.22)', whiteSpace:'nowrap' },
+  hero: { minHeight:'calc(100vh - 72px)', position:'relative', display:'flex', alignItems:'center', overflow:'hidden', maxWidth:'100vw' },
   heroImage: { position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' },
   heroShade: { position:'absolute', inset:0, background:'linear-gradient(90deg, rgba(8,13,27,0.92) 0%, rgba(8,13,27,0.74) 42%, rgba(8,13,27,0.18) 100%)' },
-  heroContent: { position:'relative', zIndex:1, width:'min(720px, 92vw)', marginLeft:'clamp(1.5rem, 7vw, 6rem)', color:'#fff', padding:'4rem 0' },
+  heroContent: { position:'relative', zIndex:1, width:'min(720px, calc(100vw - 2rem))', marginLeft:'clamp(1rem, 7vw, 6rem)', marginRight:'1rem', color:'#fff', padding:'4rem 0' },
   eyebrow: { display:'inline-flex', color:'#bfdbfe', background:'rgba(37,99,235,0.22)', border:'1px solid rgba(191,219,254,0.28)', padding:'7px 10px', borderRadius:8, fontSize:13, fontWeight:800, marginBottom:18 },
-  h1: { fontSize:'clamp(38px, 5vw, 68px)', lineHeight:1.02, letterSpacing:0, margin:'0 0 18px', fontWeight:900, maxWidth:780 },
-  heroText: { fontSize:18, lineHeight:1.6, color:'rgba(255,255,255,0.78)', margin:'0 0 26px', maxWidth:640 },
+  h1: { fontSize:'clamp(34px, 10vw, 68px)', lineHeight:1.04, letterSpacing:0, margin:'0 0 18px', fontWeight:900, maxWidth:780 },
+  heroText: { fontSize:'clamp(16px, 4.3vw, 18px)', lineHeight:1.55, color:'rgba(255,255,255,0.78)', margin:'0 0 26px', maxWidth:640 },
   heroActions: { display:'flex', gap:12, flexWrap:'wrap' },
-  primaryBtn: { display:'inline-flex', alignItems:'center', justifyContent:'center', minHeight:44, padding:'0 18px', background:'#2563eb', color:'#fff', borderRadius:8, textDecoration:'none', fontWeight:850, boxShadow:'0 12px 26px rgba(37,99,235,0.28)' },
-  secondaryBtn: { display:'inline-flex', alignItems:'center', justifyContent:'center', minHeight:44, padding:'0 18px', background:'rgba(255,255,255,0.12)', color:'#fff', border:'1px solid rgba(255,255,255,0.24)', borderRadius:8, textDecoration:'none', fontWeight:800 },
-  statsBand: { display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(180px, 1fr))', gap:1, background:'#e5e7eb', maxWidth:1180, margin:'-42px auto 0', position:'relative', zIndex:2, borderRadius:10, overflow:'hidden', boxShadow:'0 18px 42px rgba(15,23,42,0.16)' },
+  primaryBtn: { display:'inline-flex', alignItems:'center', justifyContent:'center', minHeight:44, padding:'0 18px', background:'#2563eb', color:'#fff', borderRadius:8, textDecoration:'none', fontWeight:850, boxShadow:'0 12px 26px rgba(37,99,235,0.28)', flex:'0 1 auto' },
+  secondaryBtn: { display:'inline-flex', alignItems:'center', justifyContent:'center', minHeight:44, padding:'0 18px', background:'rgba(255,255,255,0.12)', color:'#fff', border:'1px solid rgba(255,255,255,0.24)', borderRadius:8, textDecoration:'none', fontWeight:800, flex:'0 1 auto' },
+  statsBand: { display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(150px, 1fr))', gap:1, background:'#e5e7eb', width:'min(1180px, calc(100% - 2rem))', margin:'-42px auto 0', position:'relative', zIndex:2, borderRadius:10, overflow:'hidden', boxShadow:'0 18px 42px rgba(15,23,42,0.16)' },
   statItem: { background:'#fff', padding:'1.35rem', display:'flex', flexDirection:'column', gap:4 },
   statValue: { fontSize:28, fontWeight:900, color:'#111827' },
   statLabel: { color:'#64748b', fontSize:13, fontWeight:750 },
