@@ -29,6 +29,7 @@ export default function Home() {
           <a href="#servicios" className="home-nav-link">Servicios</a>
           <a href="#empresa" className="home-nav-link">Empresa</a>
           <Link to="/login" className="home-login-btn">Iniciar sesión</Link>
+          <span className="home-menu-icon" aria-hidden="true">☰</span>
         </nav>
       </header>
 

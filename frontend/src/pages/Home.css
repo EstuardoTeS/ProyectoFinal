@@ -88,6 +88,10 @@
   box-shadow: 0 10px 20px rgba(37, 99, 235, 0.22);
 }
 
+.home-menu-icon {
+  display: none;
+}
+
 .home-hero {
   min-height: calc(100vh - 76px);
   position: relative;
@@ -330,4 +334,272 @@
   .home-h1 {
     font-size: 32px;
   }
+}
+
+body.native-app .home-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 92%, rgba(148, 163, 184, 0.2), transparent 92px),
+    radial-gradient(circle at 86% 88%, rgba(37, 99, 235, 0.12), transparent 96px),
+    #f8fafc;
+}
+
+body.native-app .home-topbar {
+  position: sticky;
+  top: 0;
+  min-height: 70px;
+  padding: 12px 18px 8px;
+  background: rgba(248, 250, 252, 0.92);
+  border-bottom: 0;
+  box-shadow: none;
+}
+
+body.native-app .home-brand-mark {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+body.native-app .home-brand {
+  gap: 10px;
+}
+
+body.native-app .home-brand-name {
+  max-width: none;
+  font-size: 14px;
+  line-height: 1.05;
+}
+
+body.native-app .home-brand-sub {
+  font-size: 10px;
+  color: #334155;
+}
+
+body.native-app .home-nav-link,
+body.native-app .home-login-btn {
+  display: none;
+}
+
+body.native-app .home-menu-icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #111827;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+body.native-app .home-hero {
+  min-height: calc(100vh - 70px);
+  align-items: stretch;
+  background: #f8fafc;
+}
+
+body.native-app .home-hero::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  height: 126px;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, transparent 45%, rgba(148, 163, 184, 0.26) 45% 48%, transparent 48%),
+    radial-gradient(circle at 16% 62%, transparent 18px, rgba(148, 163, 184, 0.28) 19px 21px, transparent 22px),
+    radial-gradient(circle at 84% 58%, transparent 22px, rgba(148, 163, 184, 0.28) 23px 25px, transparent 26px);
+  opacity: 0.75;
+}
+
+body.native-app .home-hero-image {
+  height: 210px;
+  opacity: 0.18;
+  object-position: center top;
+  mask-image: linear-gradient(180deg, #000 0%, transparent 96%);
+}
+
+body.native-app .home-hero-shade {
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.18) 0%, #f8fafc 36%, #f8fafc 100%);
+}
+
+body.native-app .home-hero-content {
+  width: 100%;
+  margin: 0;
+  padding: 68px 22px 34px;
+  color: #111827;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+body.native-app .home-eyebrow {
+  align-self: center;
+  max-width: 100%;
+  color: #1e3a8a;
+  background: rgba(219, 234, 254, 0.92);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1.25;
+  margin-bottom: 28px;
+}
+
+body.native-app .home-h1 {
+  max-width: 330px;
+  margin: 0 auto 28px;
+  font-size: clamp(30px, 9vw, 42px);
+  line-height: 0.98;
+  color: #0f172a;
+  letter-spacing: 0;
+}
+
+body.native-app .home-hero-text {
+  max-width: 310px;
+  margin: 0 auto 44px;
+  color: #1f2937;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+body.native-app .home-hero-actions {
+  width: min(100%, 310px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+body.native-app .home-primary-btn,
+body.native-app .home-secondary-btn {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+body.native-app .home-primary-btn {
+  background: #0f2f6e;
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(15, 47, 110, 0.28);
+}
+
+body.native-app .home-secondary-btn {
+  color: #111827;
+  background: #fff;
+  border: 1.5px solid #111827;
+  box-shadow: none;
+}
+
+body.native-app .home-stats-band {
+  display: none;
+}
+
+body.native-app #servicios,
+body.native-app #empresa {
+  max-width: none !important;
+  padding: 32px 18px 12px !important;
+  margin: 0 !important;
+}
+
+body.native-app #servicios {
+  background:
+    radial-gradient(circle at 92% 24%, rgba(148, 163, 184, 0.16), transparent 84px),
+    #f8fafc;
+}
+
+body.native-app #servicios > div:first-child,
+body.native-app #empresa > div:first-child {
+  max-width: none !important;
+  margin-bottom: 18px !important;
+}
+
+body.native-app #servicios h2,
+body.native-app #empresa h2 {
+  font-size: 28px !important;
+  line-height: 1.05 !important;
+  margin: 6px 0 10px !important;
+}
+
+body.native-app #servicios p,
+body.native-app #empresa p {
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+body.native-app #servicios > div:nth-child(2) {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+}
+
+body.native-app #servicios article {
+  padding: 18px !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08) !important;
+}
+
+body.native-app #servicios article span {
+  width: 28px !important;
+  height: 24px !important;
+  border-radius: 7px !important;
+  margin-bottom: 14px !important;
+  background: transparent !important;
+  border: 2px solid currentColor;
+}
+
+body.native-app #servicios article:nth-child(1) span {
+  color: #2563eb;
+}
+
+body.native-app #servicios article:nth-child(2) span {
+  color: #16a34a;
+}
+
+body.native-app #servicios article:nth-child(3) span {
+  color: #7c3aed;
+}
+
+body.native-app #servicios h3 {
+  font-size: 16px !important;
+  margin-bottom: 8px !important;
+}
+
+body.native-app #empresa {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+  padding-top: 24px !important;
+}
+
+body.native-app #empresa > div:last-child {
+  padding: 18px !important;
+  border-radius: 14px !important;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08) !important;
+}
+
+body.native-app #contacto {
+  margin: 20px 18px 28px !important;
+  padding: 22px 16px !important;
+  border-radius: 16px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 16px !important;
+  text-align: center;
+  background: #111827 !important;
+}
+
+body.native-app #contacto h2 {
+  font-size: 22px !important;
+}
+
+body.native-app #contacto .home-primary-btn {
+  background: #2563eb;
 }
