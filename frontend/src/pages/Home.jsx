@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import './Home.css'
 
 export default function Home() {
   const services = [
@@ -15,44 +16,44 @@ export default function Home() {
   ]
 
   return (
-    <div style={styles.shell}>
-      <header style={styles.topbar}>
-        <Link to="/" style={styles.brand}>
-          <span style={styles.brandMark}>TS</span>
+    <div className="home-shell">
+      <header className="home-topbar">
+        <Link to="/" className="home-brand">
+          <span className="home-brand-mark">TS</span>
           <span>
-            <strong style={styles.brandName}>TechSolutions</strong>
-            <small style={styles.brandSub}>Business ERP</small>
+            <strong className="home-brand-name">TechSolutions</strong>
+            <small className="home-brand-sub">Business ERP</small>
           </span>
         </Link>
-        <nav style={styles.nav}>
-          <a href="#servicios" style={styles.navLink}>Servicios</a>
-          <a href="#empresa" style={styles.navLink}>Empresa</a>
-          <Link to="/login" style={styles.loginBtn}>Iniciar sesión</Link>
+        <nav className="home-nav">
+          <a href="#servicios" className="home-nav-link">Servicios</a>
+          <a href="#empresa" className="home-nav-link">Empresa</a>
+          <Link to="/login" className="home-login-btn">Iniciar sesión</Link>
         </nav>
       </header>
 
       <main>
-        <section style={styles.hero}>
-          <img src="/erp-hero.png" alt="" style={styles.heroImage} />
-          <div style={styles.heroShade} />
-          <div style={styles.heroContent}>
-            <span style={styles.eyebrow}>Software empresarial para equipos en crecimiento</span>
-            <h1 style={styles.h1}>Controla proyectos, tareas, clientes y personal desde un ERP moderno.</h1>
-            <p style={styles.heroText}>
+        <section className="home-hero">
+          <img src="/erp-hero.png" alt="" className="home-hero-image" />
+          <div className="home-hero-shade" />
+          <div className="home-hero-content">
+            <span className="home-eyebrow">Software empresarial para equipos en crecimiento</span>
+            <h1 className="home-h1">Controla proyectos, tareas, clientes y personal desde un ERP moderno.</h1>
+            <p className="home-hero-text">
               TechSolutions centraliza la operación de tu empresa con roles claros para administradores, empleados y clientes.
             </p>
-            <div style={styles.heroActions}>
-              <Link to="/login" style={styles.primaryBtn}>Acceder al sistema</Link>
-              <a href="#servicios" style={styles.secondaryBtn}>Ver soluciones</a>
+            <div className="home-hero-actions">
+              <Link to="/login" className="home-primary-btn">Acceder al sistema</Link>
+              <a href="#servicios" className="home-secondary-btn">Ver soluciones</a>
             </div>
           </div>
         </section>
 
-        <section style={styles.statsBand}>
+        <section className="home-stats-band">
           {stats.map(([value, label]) => (
-            <div key={label} style={styles.statItem}>
-              <strong style={styles.statValue}>{value}</strong>
-              <span style={styles.statLabel}>{label}</span>
+            <div key={label} className="home-stat-item">
+              <strong className="home-stat-value">{value}</strong>
+              <span className="home-stat-label">{label}</span>
             </div>
           ))}
         </section>
@@ -94,7 +95,7 @@ export default function Home() {
             <span style={styles.sectionKicker}>Acceso seguro</span>
             <h2 style={styles.ctaTitle}>Ingresa al panel de gestión empresarial.</h2>
           </div>
-          <Link to="/login" style={styles.primaryBtn}>Entrar ahora</Link>
+          <Link to="/login" className="home-primary-btn">Entrar ahora</Link>
         </section>
       </main>
     </div>
