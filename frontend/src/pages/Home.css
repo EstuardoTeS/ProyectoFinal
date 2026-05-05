@@ -603,3 +603,99 @@ body.native-app #contacto h2 {
 body.native-app #contacto .home-primary-btn {
   background: #2563eb;
 }
+
+body.native-app .home-shell {
+  background:
+    radial-gradient(circle at 78% 12%, rgba(47, 138, 196, 0.22), transparent 160px),
+    radial-gradient(circle at 15% 94%, rgba(37, 99, 235, 0.14), transparent 150px),
+    #04101f;
+}
+
+body.native-app .home-topbar {
+  background: #04101f;
+}
+
+body.native-app .home-brand-mark {
+  background: #0d223d;
+  color: #eaf7ff;
+  border: 1px solid rgba(102, 180, 225, 0.18);
+}
+
+body.native-app .home-brand-name,
+body.native-app .home-h1,
+body.native-app #servicios h2,
+body.native-app #empresa h2,
+body.native-app #contacto h2 {
+  color: #ffffff !important;
+}
+
+body.native-app .home-brand-sub,
+body.native-app .home-hero-text,
+body.native-app #servicios p,
+body.native-app #empresa p {
+  color: #b9c9da !important;
+}
+
+body.native-app .home-menu-icon {
+  background: #0d223d;
+  color: #eaf7ff;
+  border: 1px solid rgba(102, 180, 225, 0.18);
+}
+
+body.native-app .home-hero {
+  background: #04101f;
+}
+
+body.native-app .home-hero-image {
+  opacity: 0.08;
+  mix-blend-mode: screen;
+}
+
+body.native-app .home-hero-shade {
+  background:
+    linear-gradient(180deg, rgba(4, 16, 31, 0.1) 0%, #04101f 58%, #04101f 100%);
+}
+
+body.native-app .home-hero::after {
+  opacity: 0.22;
+  filter: invert(1);
+}
+
+body.native-app .home-eyebrow {
+  color: #dff5ff;
+  background: rgba(47, 138, 196, 0.34);
+  border-color: rgba(127, 184, 220, 0.26);
+}
+
+body.native-app .home-primary-btn {
+  background: linear-gradient(135deg, #3ba0d6 0%, #2563eb 100%);
+  color: #ffffff;
+  box-shadow: 0 14px 32px rgba(47, 138, 196, 0.34);
+}
+
+body.native-app .home-secondary-btn {
+  color: #ffffff;
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.82);
+}
+
+body.native-app #servicios,
+body.native-app #empresa {
+  background: #04101f !important;
+}
+
+body.native-app #servicios article,
+body.native-app #empresa > div:last-child {
+  background: #0d223d !important;
+  border-color: rgba(102, 180, 225, 0.16) !important;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28) !important;
+}
+
+body.native-app #servicios h3 {
+  color: #ffffff !important;
+}
+
+body.native-app #contacto {
+  background: #0a1b31 !important;
+  border: 1px solid rgba(102, 180, 225, 0.16);
+}

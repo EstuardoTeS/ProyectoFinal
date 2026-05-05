@@ -236,3 +236,102 @@ body.native-app table {
     min-height: 44px;
   }
 }
+
+body.native-app {
+  background: #061527;
+  color: #f8fbff;
+}
+
+body.native-app #root {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(54, 151, 205, 0.18), transparent 220px),
+    linear-gradient(180deg, #07182d 0%, #04101f 100%);
+}
+
+body.native-app .app-navbar {
+  background: linear-gradient(180deg, #08213c 0%, #061527 100%) !important;
+  border-bottom: 1px solid rgba(88, 166, 214, 0.2) !important;
+}
+
+body.native-app .app-navbar-brand span:first-child,
+body.native-app h2[style],
+body.native-app h3[style],
+body.native-app strong {
+  color: #ffffff !important;
+}
+
+body.native-app .app-navbar-brand span:last-child {
+  background: #2f8ac4 !important;
+  color: #eaf7ff !important;
+}
+
+body.native-app .app-navbar + div[style] {
+  background:
+    radial-gradient(circle at 100% 10%, rgba(58, 148, 203, 0.16), transparent 170px),
+    #061527 !important;
+}
+
+body.native-app form[style],
+body.native-app div[style*="box-shadow"],
+body.native-app table {
+  background: #0d223d !important;
+  border-color: rgba(102, 180, 225, 0.16) !important;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28) !important;
+}
+
+body.native-app p[style],
+body.native-app span[style],
+body.native-app label[style],
+body.native-app td[style] {
+  color: #b9c9da !important;
+}
+
+body.native-app th[style] {
+  background: #0a1b31 !important;
+  color: #7fb8dc !important;
+  border-color: rgba(102, 180, 225, 0.12) !important;
+}
+
+body.native-app input,
+body.native-app select,
+body.native-app textarea {
+  background: #081a30 !important;
+  border: 1px solid rgba(119, 188, 226, 0.2) !important;
+  color: #f8fbff !important;
+}
+
+body.native-app input::placeholder,
+body.native-app textarea::placeholder {
+  color: #6f849a !important;
+}
+
+body.native-app button[style],
+body.native-app a[style*="background"] {
+  background: linear-gradient(135deg, #2f8ac4 0%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 26px rgba(47, 138, 196, 0.25) !important;
+}
+
+body.native-app button[style*="background:#e53e3e"],
+body.native-app button[style*="background: '#e53e3e'"] {
+  background: #ef4444 !important;
+}
+
+body.native-app .native-tabbar {
+  background: rgba(4, 16, 31, 0.96);
+  border-color: rgba(102, 180, 225, 0.16);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.38);
+}
+
+body.native-app .native-tabbar-item {
+  color: rgba(226, 242, 252, 0.62);
+}
+
+body.native-app .native-tabbar-item.is-active {
+  background: linear-gradient(135deg, #2f8ac4 0%, #2563eb 100%);
+  color: #ffffff;
+}
+
+body.native-app .native-tabbar-icon {
+  filter: saturate(1.15);
+}
