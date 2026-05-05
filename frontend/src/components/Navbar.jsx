@@ -21,7 +21,10 @@ export default function Navbar() {
     ...(role === 'admin' ? [{ to:'http://127.0.0.1:8000/admin/', label:'🔧 Panel Admin', external:true }] : []),
   ]
 
+  const appLinks = links.filter(l => !l.external)
+
   return (
+    <>
     <nav className="app-navbar" style={styles.nav}>
       <div className="app-navbar-brand" style={styles.brand}>
         <span style={styles.brandName}>TechSolutions</span>
@@ -43,6 +46,19 @@ export default function Navbar() {
         <button onClick={logout} style={styles.logout}>Salir</button>
       </div>
     </nav>
+    <nav className="native-tabbar" aria-label="Navegación principal">
+      {appLinks.map(l => (
+        <Link
+          key={l.to}
+          to={l.to}
+          className={`native-tabbar-item ${location.pathname === l.to ? 'is-active' : ''}`}
+        >
+          <span className="native-tabbar-icon">{l.label.split(' ')[0]}</span>
+          <span className="native-tabbar-text">{l.label.replace(/^.\s/, '')}</span>
+        </Link>
+      ))}
+    </nav>
+    </>
   )
 }
 
