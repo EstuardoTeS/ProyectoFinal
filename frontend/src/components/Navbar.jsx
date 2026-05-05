@@ -22,12 +22,12 @@ export default function Navbar() {
   ]
 
   return (
-    <nav style={styles.nav}>
-      <div style={styles.brand}>
+    <nav className="app-navbar" style={styles.nav}>
+      <div className="app-navbar-brand" style={styles.brand}>
         <span style={styles.brandName}>TechSolutions</span>
         <span style={styles.brandSub}>ERP</span>
       </div>
-      <div style={styles.links}>
+      <div className="app-navbar-links" style={styles.links}>
         {links.map(l => l.external ? (
           <a key={l.to} href={l.to} target="_blank" rel="noreferrer"
             style={styles.link}>{l.label}</a>
@@ -38,7 +38,7 @@ export default function Navbar() {
           </Link>
         ))}
       </div>
-      <div style={styles.right}>
+      <div className="app-navbar-session" style={styles.right}>
         <span style={styles.userInfo}>👤 {username} · <strong>{roleLabel}</strong></span>
         <button onClick={logout} style={styles.logout}>Salir</button>
       </div>
