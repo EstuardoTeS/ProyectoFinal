@@ -1,0 +1,8 @@
+{
+  "appId": "com.techsolutions.erp",
+  "appName": "TechSolutions",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
