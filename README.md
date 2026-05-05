@@ -46,3 +46,4 @@ npm run dev
 ```
 
 La API local se consume desde `http://127.0.0.1:8000/api`.
+# ProyectoFinal
