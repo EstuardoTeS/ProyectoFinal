@@ -15,15 +15,21 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault()
     setMsg({ text:'', ok:true })
+    const cleanUsername = username.trim()
     try {
-      const res = await api.post('/auth/login/', { username, password })
+      const res = await api.post('/auth/login/', { username: cleanUsername, password })
       localStorage.setItem('token',    res.data.access)
       localStorage.setItem('role',     res.data.role ?? 'user')
-      localStorage.setItem('username', username)
+      localStorage.setItem('username', cleanUsername)
       const role = res.data.role
       navigate(role === 'employee' ? '/tasks' : role === 'client' ? '/projects' : '/dashboard')
-    } catch {
-      setMsg({ text:'Usuario o contraseña incorrectos', ok:false })
+    } catch (err) {
+      if (!err.response) {
+        setMsg({ text:'No se pudo conectar con el servidor. Revisa internet o espera a que Render despierte.', ok:false })
+        return
+      }
+      const detail = err.response?.data?.detail
+      setMsg({ text: detail || 'Usuario o contraseña incorrectos', ok:false })
     }
   }
 
@@ -67,10 +73,12 @@ export default function Login() {
           <form onSubmit={handleLogin} style={styles.form}>
             <label style={styles.label}>Usuario</label>
             <input style={styles.input} value={username}
-              onChange={e=>setUsername(e.target.value)} required autoComplete="username"/>
+              onChange={e=>setUsername(e.target.value)} required autoComplete="username"
+              autoCapitalize="none" autoCorrect="off" spellCheck={false}/>
             <label style={styles.label}>Contraseña</label>
             <input type="password" style={styles.input} value={password}
-              onChange={e=>setPassword(e.target.value)} required autoComplete="current-password"/>
+              onChange={e=>setPassword(e.target.value)} required autoComplete="current-password"
+              autoCapitalize="none" autoCorrect="off" spellCheck={false}/>
             <button type="submit" style={styles.btn}>Ingresar</button>
           </form>
         ) : (
