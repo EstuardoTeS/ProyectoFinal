@@ -67,12 +67,12 @@ body.native-app .native-tabbar {
   right: 12px;
   bottom: 10px;
   z-index: 200;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  display: flex;
   gap: 4px;
   min-height: 64px;
   padding: 7px;
+  overflow-x: auto;
+  scrollbar-width: none;
   background: rgba(17, 24, 39, 0.96);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
@@ -80,8 +80,13 @@ body.native-app .native-tabbar {
   backdrop-filter: blur(16px);
 }
 
+body.native-app .native-tabbar::-webkit-scrollbar {
+  display: none;
+}
+
 body.native-app .native-tabbar-item {
-  min-width: 0;
+  flex: 0 0 72px;
+  min-width: 72px;
   min-height: 50px;
   display: flex;
   flex-direction: column;

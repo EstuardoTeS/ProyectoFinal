@@ -17,6 +17,7 @@ export default function Navbar() {
     ...(role === 'admin' ? [{ to:'/clients', label:'👥 Clientes' }] : []),
     ...(role !== 'employee' ? [{ to:'/projects', label: role === 'client' ? '📁 Mis proyectos' : '📁 Proyectos' }] : []),
     { to:'/tasks',     label:'✅ Tareas' },
+    ...(role === 'admin' || role === 'employee' ? [{ to:'/chat', label:'💬 Chat' }] : []),
     ...(role === 'admin' ? [{ to:'/users', label:'👷 Empleados' }] : []),
     ...(role === 'admin' ? [{ to:'http://127.0.0.1:8000/admin/', label:'🔧 Panel Admin', external:true }] : []),
   ]
