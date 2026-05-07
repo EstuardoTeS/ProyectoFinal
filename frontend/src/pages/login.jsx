@@ -9,6 +9,7 @@ export default function Login() {
   const [phone,    setPhone]    = useState('')
   const [company,  setCompany]  = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [msg,      setMsg]      = useState({ text:'', ok:true })
   const navigate = useNavigate()
 
@@ -76,9 +77,14 @@ export default function Login() {
               onChange={e=>setUsername(e.target.value)} required autoComplete="username"
               autoCapitalize="none" autoCorrect="off" spellCheck={false}/>
             <label style={styles.label}>Contraseña</label>
-            <input type="password" style={styles.input} value={password}
-              onChange={e=>setPassword(e.target.value)} required autoComplete="current-password"
-              autoCapitalize="none" autoCorrect="off" spellCheck={false}/>
+            <div style={styles.passwordWrap}>
+              <input type={showPassword ? 'text' : 'password'} style={{...styles.input, ...styles.passwordInput}} value={password}
+                onChange={e=>setPassword(e.target.value)} required autoComplete="current-password"
+                autoCapitalize="none" autoCorrect="off" spellCheck={false}/>
+              <button type="button" style={styles.eyeBtn} onClick={()=>setShowPassword(!showPassword)}>
+                {showPassword ? 'Ocultar' : 'Ver'}
+              </button>
+            </div>
             <button type="submit" style={styles.btn}>Ingresar</button>
           </form>
         ) : (
@@ -96,8 +102,13 @@ export default function Login() {
             <input style={styles.input} value={company}
               onChange={e=>setCompany(e.target.value)}/>
             <label style={styles.label}>Contraseña</label>
-            <input type="password" style={styles.input} value={password}
-              onChange={e=>setPassword(e.target.value)} required/>
+            <div style={styles.passwordWrap}>
+              <input type={showPassword ? 'text' : 'password'} style={{...styles.input, ...styles.passwordInput}} value={password}
+                onChange={e=>setPassword(e.target.value)} required autoCapitalize="none" autoCorrect="off" spellCheck={false}/>
+              <button type="button" style={styles.eyeBtn} onClick={()=>setShowPassword(!showPassword)}>
+                {showPassword ? 'Ocultar' : 'Ver'}
+              </button>
+            </div>
             <button type="submit" style={styles.btn}>Registrar cliente</button>
           </form>
         )}
@@ -118,5 +129,8 @@ const styles = {
   form:      { display:'flex', flexDirection:'column', gap:10 },
   label:     { fontSize:13, color:'#475569', fontWeight:750 },
   input:     { padding:'10px 12px', borderRadius:8, border:'1px solid #d7dee8', fontSize:14, outline:'none', background:'#fff' },
+  passwordWrap:{ position:'relative', display:'flex', alignItems:'center' },
+  passwordInput:{ width:'100%', paddingRight:74 },
+  eyeBtn:    { position:'absolute', right:6, top:6, bottom:6, border:'none', borderRadius:7, background:'#e2e8f0', color:'#0f172a', padding:'0 12px', fontSize:12, fontWeight:800, cursor:'pointer' },
   btn:       { marginTop:8, padding:11, borderRadius:8, background:'#2563eb', color:'#fff', fontWeight:750, fontSize:15, border:'none', cursor:'pointer', boxShadow:'0 10px 20px rgba(37,99,235,0.22)' },
 }
