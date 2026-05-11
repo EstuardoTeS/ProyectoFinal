@@ -12,6 +12,7 @@ export default function Tasks() {
   const [editing, setEditing] = useState(null)
   const [msg, setMsg] = useState('')
   const [reportTask, setReportTask] = useState(null)
+  const [adminHistory, setAdminHistory] = useState([])
   const role = localStorage.getItem('role')
   const canCreate = role === 'admin'
   const isAdmin = role === 'admin'
@@ -22,10 +23,12 @@ export default function Tasks() {
       const requests = [api.get('/tasks/')]
       if (!isEmployee) requests.push(api.get('/projects/'))
       if (isAdmin) requests.push(api.get('/users/'))
+      if (isAdmin) requests.push(api.get('/tasks/history/'))
       const responses = await Promise.all(requests)
       setTasks(responses[0].data)
       setProjects(!isEmployee ? responses[1].data : [])
       setUsers(isAdmin ? responses[2].data.filter(u => u.role === 'employee' && u.is_active) : [])
+      setAdminHistory(isAdmin ? responses[3].data : [])
     }
     load()
   }, [isAdmin, isEmployee])
@@ -33,6 +36,10 @@ export default function Tasks() {
   const reload = async () => {
     const res = await api.get('/tasks/')
     setTasks(res.data)
+    if (isAdmin) {
+      const historyRes = await api.get('/tasks/history/')
+      setAdminHistory(historyRes.data)
+    }
   }
 
   const save = async (e) => {
@@ -102,7 +109,33 @@ export default function Tasks() {
   const statusColor = { pending:'#f59e0b', in_progress:'#2563eb', completed:'#16a34a', cancelled:'#ef4444' }
   const statusBg = { pending:'#fef3c7', in_progress:'#dbeafe', completed:'#dcfce7', cancelled:'#fee2e2' }
   const statusText = { pending:'#92400e', in_progress:'#1d4ed8', completed:'#166534', cancelled:'#991b1b' }
-  const historyItems = tasks.flatMap(task => (task.history ?? []).map(item => ({ ...item, task })))
+  const taskHistoryItems = tasks
+    .flatMap(task => (task.history ?? []).map(item => ({ ...item, task })))
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+  const historyItems = isAdmin
+    ? adminHistory.map(item => ({
+        ...item,
+        task: {
+          title: item.task_title,
+          project_name: item.project_name,
+          client_name: item.client_name,
+          assigned_to_username: item.assigned_to_username,
+        },
+      }))
+    : taskHistoryItems
+  const projectHistory = historyItems.reduce((groups, item) => {
+    const projectName = item.task.project_name || 'Sin proyecto'
+    if (!groups[projectName]) groups[projectName] = []
+    groups[projectName].push(item)
+    return groups
+  }, {})
+  const formatHistoryDate = (value) => new Date(value).toLocaleString('es-GT', {
+    day:'2-digit',
+    month:'2-digit',
+    year:'numeric',
+    hour:'2-digit',
+    minute:'2-digit',
+  })
 
   return (
     <div>
@@ -178,12 +211,77 @@ export default function Tasks() {
         </header>
         {msg && <p style={styles.msg}>{msg}</p>}
 
-        {(isAdmin || role === 'client') && (
+        {isAdmin && (
           <section style={styles.historyPanel}>
             <div style={styles.historyHead}>
               <div>
                 <span className="app-page-kicker">Historial</span>
-                <h3 style={styles.historyTitle}>{isAdmin ? 'Histórico general de tareas' : 'Historial de mis proyectos'}</h3>
+                <h3 style={styles.historyTitle}>Historial general por proyecto</h3>
+                <p style={styles.historyIntro}>Registro cronológico de cambios de estado, fecha, hora, tarea, responsable y usuario que realizó el movimiento.</p>
+              </div>
+              <span style={styles.historyCount}>{historyItems.length} movimientos</span>
+            </div>
+            <div style={styles.projectHistoryList}>
+              {historyItems.length === 0 ? (
+                <p style={styles.historyEmpty}>Aún no hay movimientos históricos registrados.</p>
+              ) : Object.entries(projectHistory).map(([projectName, items]) => (
+                <article key={projectName} style={styles.projectHistoryCard}>
+                  <div style={styles.projectHistoryHeader}>
+                    <div>
+                      <span style={styles.projectHistoryKicker}>Proyecto</span>
+                      <strong style={styles.projectHistoryName}>{projectName}</strong>
+                      <small style={styles.historyMeta}>{items[0]?.task.client_name || 'Sin cliente registrado'}</small>
+                    </div>
+                    <span style={styles.historyCount}>{items.length} cambios</span>
+                  </div>
+                  <div style={styles.historyTableWrap}>
+                    <table style={styles.historyTable}>
+                      <thead>
+                        <tr>
+                          <th style={styles.historyTh}>Fecha y hora</th>
+                          <th style={styles.historyTh}>Tarea</th>
+                          <th style={styles.historyTh}>Cambio de estado</th>
+                          <th style={styles.historyTh}>Empleado</th>
+                          <th style={styles.historyTh}>Modificado por</th>
+                          <th style={styles.historyTh}>Nota</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {items.map(item => (
+                          <tr key={`${item.task.id}-${item.id}`}>
+                            <td style={styles.historyTd}>{formatHistoryDate(item.created_at)}</td>
+                            <td style={styles.historyTd}><strong style={styles.historyTask}>{item.task.title}</strong></td>
+                            <td style={styles.historyTd}>
+                              {item.action === 'status_changed' ? (
+                                <span style={styles.statusFlow}>
+                                  {item.previous_status_label || 'Sin estado'}
+                                  <strong>→</strong>
+                                  {item.new_status_label || 'Sin estado'}
+                                </span>
+                              ) : (
+                                <span style={styles.statusFlow}>{item.action_label}</span>
+                              )}
+                            </td>
+                            <td style={styles.historyTd}>{item.task.assigned_to_username || 'Sin asignar'}</td>
+                            <td style={styles.historyTd}>{item.changed_by_username || 'Sistema'}</td>
+                            <td style={styles.historyTd}>{item.note || '-'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {role === 'client' && (
+          <section style={styles.historyPanel}>
+            <div style={styles.historyHead}>
+              <div>
+                <span className="app-page-kicker">Historial</span>
+                <h3 style={styles.historyTitle}>Historial de mis proyectos</h3>
               </div>
               <span style={styles.historyCount}>{historyItems.length} movimientos</span>
             </div>
@@ -201,7 +299,7 @@ export default function Tasks() {
                         : item.action_label}
                     </p>
                     <small style={styles.historyMeta}>
-                      {new Date(item.created_at).toLocaleString('es-GT')} · {item.changed_by_username || 'Sistema'}
+                      {formatHistoryDate(item.created_at)} · {item.changed_by_username || 'Sistema'}
                       {item.task.client_name ? ` · ${item.task.client_name}` : ''}
                     </small>
                   </div>
@@ -374,6 +472,7 @@ const styles = {
   historyPanel:{ background:'#fffdfa', border:'1px solid #e4dac1', borderRadius:12, padding:'1.25rem', marginBottom:24, boxShadow:'0 14px 32px rgba(8,47,87,0.09)' },
   historyHead: { display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, marginBottom:12 },
   historyTitle:{ margin:'4px 0 0', fontSize:18, color:'#082f57', fontWeight:850 },
+  historyIntro:{ margin:'6px 0 0', color:'#658094', fontSize:13, maxWidth:760 },
   historyCount:{ background:'#fff1dd', color:'#e36800', borderRadius:999, padding:'6px 10px', fontSize:12, fontWeight:850 },
   historyList: { display:'grid', gap:10 },
   historyItem: { display:'flex', gap:10, alignItems:'center', padding:'12px', borderRadius:10, background:'#fff', border:'1px solid #efe8d4' },
@@ -387,4 +486,14 @@ const styles = {
   cardHistoryTop:{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:10, color:'#082f57', marginBottom:10 },
   miniTimeline:{ display:'grid', gap:8 },
   miniHistoryItem:{ display:'flex', gap:10, alignItems:'flex-start' },
+  projectHistoryList:{ display:'grid', gap:14 },
+  projectHistoryCard:{ background:'#fff', border:'1px solid #efe8d4', borderRadius:12, overflow:'hidden', boxShadow:'0 10px 24px rgba(8,47,87,0.06)' },
+  projectHistoryHeader:{ display:'flex', justifyContent:'space-between', gap:12, alignItems:'center', padding:'14px 16px', background:'linear-gradient(135deg,#fff8e9,#fffdfa)' },
+  projectHistoryKicker:{ display:'block', color:'#e36800', fontSize:11, fontWeight:900, textTransform:'uppercase', marginBottom:3 },
+  projectHistoryName:{ display:'block', color:'#082f57', fontSize:16, fontWeight:900 },
+  historyTableWrap:{ overflowX:'auto' },
+  historyTable:{ width:'100%', borderCollapse:'collapse', minWidth:900 },
+  historyTh:{ background:'#082f57', color:'#fffdfa', padding:'11px 12px', textAlign:'left', fontSize:11, textTransform:'uppercase', letterSpacing:'0.03em' },
+  historyTd:{ padding:'12px', borderTop:'1px solid #efe8d4', color:'#31546e', fontSize:13, verticalAlign:'top' },
+  statusFlow:{ display:'inline-flex', alignItems:'center', gap:7, color:'#117b82', fontWeight:850, whiteSpace:'nowrap' },
 }

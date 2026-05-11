@@ -1,8 +1,11 @@
 from rest_framework import viewsets, permissions
+from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.response import Response
 from django.db.models import Count, Q
 from .models import Task, TaskHistory
 from .serializers import EmployeeTaskStatusSerializer, TaskSerializer
+from .serializers import TaskHistorySerializer
 from users.models import User
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -95,3 +98,14 @@ class TaskViewSet(viewsets.ModelViewSet):
         if self.request.user.role != 'admin':
             raise PermissionDenied('Solo el administrador puede eliminar tareas.')
         instance.delete()
+
+    @action(detail=False, methods=['get'], url_path='history')
+    def history(self, request):
+        if request.user.role != 'admin':
+            raise PermissionDenied('Solo el administrador puede consultar el historial general.')
+        history = (
+            TaskHistory.objects
+            .select_related('task', 'task__project', 'task__project__client', 'task__assigned_to', 'changed_by')
+            .order_by('-created_at')
+        )
+        return Response(TaskHistorySerializer(history, many=True, context={'request': request}).data)

@@ -4,6 +4,10 @@ from .models import Task, TaskHistory
 
 class TaskHistorySerializer(serializers.ModelSerializer):
     changed_by_username = serializers.CharField(source='changed_by.username', read_only=True)
+    task_title = serializers.CharField(source='task.title', read_only=True)
+    project_name = serializers.CharField(source='task.project.name', read_only=True)
+    client_name = serializers.CharField(source='task.project.client.name', read_only=True)
+    assigned_to_username = serializers.CharField(source='task.assigned_to.username', read_only=True)
     action_label = serializers.CharField(source='get_action_display', read_only=True)
     previous_status_label = serializers.SerializerMethodField()
     new_status_label = serializers.SerializerMethodField()
@@ -13,6 +17,7 @@ class TaskHistorySerializer(serializers.ModelSerializer):
         fields = [
             'id', 'action', 'action_label', 'previous_status', 'previous_status_label',
             'new_status', 'new_status_label', 'changed_by', 'changed_by_username',
+            'task_title', 'project_name', 'client_name', 'assigned_to_username',
             'note', 'created_at',
         ]
         read_only_fields = fields
