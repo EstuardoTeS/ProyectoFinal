@@ -47,17 +47,35 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         user = self.request.user
+        project = serializer.validated_data.get('project')
+
         if user.role == 'admin':
-            task = serializer.save(created_by=user)
-            TaskHistory.objects.create(
-                task=task,
-                action='created',
-                new_status=task.status,
-                changed_by=user,
-                note='Tarea creada en el sistema.',
-            )
+            assigned_to = serializer.validated_data.get('assigned_to') or self.get_auto_assigned_employee()
+            task = serializer.save(created_by=user, assigned_to=assigned_to)
+            self._create_created_history(task, user)
             return
-        raise PermissionDenied('Solo el administrador puede crear tareas.')
+
+        if user.role == 'client':
+            if not project or project.client.user_id != user.id:
+                raise PermissionDenied('No puedes crear tareas en proyectos de otro cliente.')
+            task = serializer.save(
+                created_by=user,
+                assigned_to=self.get_auto_assigned_employee(),
+                status='pending',
+            )
+            self._create_created_history(task, user)
+            return
+
+        raise PermissionDenied('Solo el administrador o el cliente del proyecto pueden crear tareas.')
+
+    def _create_created_history(self, task, user):
+        TaskHistory.objects.create(
+            task=task,
+            action='created',
+            new_status=task.status,
+            changed_by=user,
+            note='Tarea creada en el sistema.',
+        )
 
     def perform_update(self, serializer):
         user = self.request.user

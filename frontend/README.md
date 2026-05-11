@@ -1,16 +1,26 @@
-# React + Vite
+# Frontend TechSolutions ERP
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interfaz web de TechSolutions ERP desarrollada con React, Vite, React Router, Axios y Capacitor.
 
-Currently, two official plugins are available:
+Para el manual completo de usuario, instalacion, despliegue y app movil, consulta el README principal:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```text
+../README.md
+```
 
-## React Compiler
+Comandos principales:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+npm run lint
+npm run build
+npm run android:apk
+```
 
-## Expanding the ESLint configuration
+Variable de entorno:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```text
+VITE_API_URL=https://techsolutions-backend.onrender.com/api
+```
+

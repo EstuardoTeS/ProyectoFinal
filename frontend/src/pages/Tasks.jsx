@@ -22,9 +22,10 @@ export default function Tasks() {
   const [reportTask, setReportTask] = useState(null)
   const [adminHistory, setAdminHistory] = useState([])
   const role = localStorage.getItem('role')
-  const canCreate = role === 'admin'
+  const canCreate = role === 'admin' || role === 'client'
   const isAdmin = role === 'admin'
   const isEmployee = role === 'employee'
+  const isClient = role === 'client'
 
   useEffect(() => {
     const load = async () => {
@@ -293,7 +294,7 @@ export default function Tasks() {
 
         {canCreate && (
           <form onSubmit={save} style={styles.form}>
-            <h3 style={styles.formTitle}>{editing ? 'Editar tarea' : 'Nueva tarea'}</h3>
+            <h3 style={styles.formTitle}>{editing ? 'Editar tarea' : isClient ? 'Nueva solicitud de trabajo' : 'Nueva tarea'}</h3>
             <div style={styles.row}>
               <input placeholder="Título de la tarea *" style={{...styles.input, flex:2}} required
                 value={form.title} onChange={e=>setForm({...form, title:e.target.value})}/>
@@ -332,7 +333,7 @@ export default function Tasks() {
               </div>
             </div>
             <div style={{display:'flex', gap:8}}>
-              <button type="submit" style={styles.btn}>{editing ? 'Actualizar' : 'Crear tarea'}</button>
+              <button type="submit" style={styles.btn}>{editing ? 'Actualizar' : isClient ? 'Crear solicitud' : 'Crear tarea'}</button>
               {editing && <button type="button" style={styles.btnGray} onClick={()=>{setEditing(null);setForm(empty)}}>Cancelar</button>}
             </div>
           </form>
@@ -399,7 +400,7 @@ export default function Tasks() {
                   <select style={styles.statusSelect} defaultValue={t.status} onChange={e=>updateStatus(t, e.target.value)}>
                     {Object.entries(statusLabel).map(([v,l])=><option key={v} value={v}>{l}</option>)}
                   </select>
-                  {isAdmin && (
+                  {(isAdmin || isEmployee) && (
                     <>
                       <input type="number" min="0" max="100" defaultValue={t.progress ?? 0} style={styles.smallInput}
                         onBlur={e=>updateTask(t, { progress:Number(e.target.value) })}/>

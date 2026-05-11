@@ -65,4 +65,9 @@ class TaskSummarySerializer(serializers.ModelSerializer):
 class EmployeeTaskStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['status']
+        fields = ['status', 'progress', 'progress_note']
+
+    def validate_progress(self, value):
+        if value < 0 or value > 100:
+            raise serializers.ValidationError('El avance debe estar entre 0 y 100.')
+        return value
