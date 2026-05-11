@@ -105,7 +105,7 @@ export default function Audit() {
   return (
     <>
       <Navbar />
-      <main className="app-page" style={styles.page}>
+      <main className="app-page audit-page" style={styles.page}>
         <header className="app-page-header" style={styles.header}>
           <div>
             <span className="app-page-kicker">Auditoría</span>
@@ -114,12 +114,12 @@ export default function Audit() {
               Registro de cambios de estado en tareas con fecha, hora, responsable y usuario que realizó cada movimiento.
             </p>
           </div>
-          <button type="button" style={styles.printBtn} onClick={() => window.print()}>Imprimir auditoría</button>
+          <button type="button" className="audit-no-print" style={styles.printBtn} onClick={() => window.print()}>Imprimir auditoría</button>
         </header>
 
-        {msg && <p style={styles.error}>{msg}</p>}
+        {msg && <p className="audit-no-print" style={styles.error}>{msg}</p>}
 
-        <section style={styles.toolbar}>
+        <section className="audit-no-print" style={styles.toolbar}>
           <input
             style={styles.search}
             placeholder="Buscar por proyecto, tarea, cliente, empleado o estado..."
@@ -132,7 +132,7 @@ export default function Audit() {
         <section style={styles.list}>
           {filtered.length === 0 && <p style={styles.empty}>No hay movimientos para mostrar.</p>}
           {Object.entries(grouped).map(([projectName, items]) => (
-            <article key={projectName} style={styles.card}>
+            <article key={projectName} className="audit-card" style={styles.card}>
               <div style={styles.cardHead}>
                 <div>
                   <span style={styles.kicker}>Proyecto</span>
@@ -143,7 +143,7 @@ export default function Audit() {
               </div>
 
               <div style={styles.tableWrap}>
-                <table style={styles.table}>
+                <table className="audit-table" style={styles.table}>
                   <thead>
                     <tr>
                       <th style={styles.th}>Fecha y hora</th>

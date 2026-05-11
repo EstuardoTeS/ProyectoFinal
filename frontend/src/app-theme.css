@@ -492,16 +492,16 @@ body:not(.native-app) button[style*="background: '#e53e3e'"] {
 }
 
 @media print {
-  body * {
+  body.printing-task-report * {
     visibility: hidden !important;
   }
 
-  .task-report-print,
-  .task-report-print * {
+  body.printing-task-report .task-report-print,
+  body.printing-task-report .task-report-print * {
     visibility: visible !important;
   }
 
-  .task-report-print {
+  body.printing-task-report .task-report-print {
     display: block !important;
     position: absolute;
     inset: 0;
@@ -512,6 +512,32 @@ body:not(.native-app) button[style*="background: '#e53e3e'"] {
   .app-navbar,
   .native-tabbar {
     display: none !important;
+  }
+
+  body:not(.printing-task-report) {
+    background: #ffffff !important;
+  }
+
+  body:not(.printing-task-report) .audit-page {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body:not(.printing-task-report) .audit-no-print {
+    display: none !important;
+  }
+
+  body:not(.printing-task-report) .audit-card {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #e4dac1 !important;
+  }
+
+  body:not(.printing-task-report) .audit-table {
+    min-width: 0 !important;
+    font-size: 11px !important;
   }
 }
 

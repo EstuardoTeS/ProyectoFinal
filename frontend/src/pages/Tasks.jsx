@@ -4,6 +4,14 @@ import api from '../api/axios'
 
 const empty = { title:'', description:'', project:'', assigned_to:'', priority:'medium', status:'pending', progress:0, progress_note:'', due_date:'' }
 
+const buildTaskHistoryFallback = (taskList = []) => taskList.flatMap(task => (task.history ?? []).map(item => ({
+  ...item,
+  task_title: task.title,
+  project_name: task.project_name,
+  client_name: task.client_name,
+  assigned_to_username: task.assigned_to_username,
+})))
+
 export default function Tasks() {
   const [tasks, setTasks] = useState([])
   const [projects, setProjects] = useState([])
@@ -21,24 +29,44 @@ export default function Tasks() {
   useEffect(() => {
     const load = async () => {
       const requests = [api.get('/tasks/')]
-      if (!isEmployee) requests.push(api.get('/projects/'))
-      if (isAdmin) requests.push(api.get('/users/'))
-      if (isAdmin) requests.push(api.get('/tasks/history/'))
+      let projectIndex = null
+      let usersIndex = null
+      if (!isEmployee) {
+        projectIndex = requests.length
+        requests.push(api.get('/projects/'))
+      }
+      if (isAdmin) {
+        usersIndex = requests.length
+        requests.push(api.get('/users/'))
+      }
       const responses = await Promise.all(requests)
-      setTasks(responses[0].data)
-      setProjects(!isEmployee ? responses[1].data : [])
-      setUsers(isAdmin ? responses[2].data.filter(u => u.role === 'employee' && u.is_active) : [])
-      setAdminHistory(isAdmin ? responses[3].data : [])
+      const taskData = responses[0].data
+      setTasks(taskData)
+      setProjects(projectIndex !== null ? responses[projectIndex].data : [])
+      setUsers(usersIndex !== null ? responses[usersIndex].data.filter(u => u.role === 'employee' && u.is_active) : [])
+      if (isAdmin) {
+        try {
+          const historyRes = await api.get('/tasks/history/')
+          setAdminHistory(historyRes.data)
+        } catch {
+          setAdminHistory(buildTaskHistoryFallback(taskData))
+        }
+      }
     }
     load()
   }, [isAdmin, isEmployee])
 
   const reload = async () => {
     const res = await api.get('/tasks/')
-    setTasks(res.data)
+    const taskData = res.data
+    setTasks(taskData)
     if (isAdmin) {
-      const historyRes = await api.get('/tasks/history/')
-      setAdminHistory(historyRes.data)
+      try {
+        const historyRes = await api.get('/tasks/history/')
+        setAdminHistory(historyRes.data)
+      } catch {
+        setAdminHistory(buildTaskHistoryFallback(taskData))
+      }
     }
   }
 
@@ -100,7 +128,16 @@ export default function Tasks() {
 
   const openReport = (task) => {
     setReportTask(task)
-    window.setTimeout(() => window.print(), 120)
+    document.body.classList.add('printing-task-report')
+    const cleanup = () => {
+      document.body.classList.remove('printing-task-report')
+      window.removeEventListener('afterprint', cleanup)
+    }
+    window.addEventListener('afterprint', cleanup)
+    window.setTimeout(() => {
+      window.print()
+      window.setTimeout(cleanup, 800)
+    }, 120)
   }
 
   const priorityColor = { low:'#0f9d58', medium:'#f4b400', high:'#e53e3e' }
