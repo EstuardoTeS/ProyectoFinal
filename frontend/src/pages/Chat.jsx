@@ -107,7 +107,7 @@ export default function Chat() {
       setStatus('Conversación lista.')
       return res.data
     } catch (err) {
-      setError(err.response?.data?.employee?.[0] || err.response?.data?.detail || 'No se pudo iniciar la conversación.')
+      setError(getChatError(err, 'No se pudo iniciar la conversación.'))
       return null
     } finally {
       setLoading(false)
@@ -136,7 +136,7 @@ export default function Chat() {
       await loadMessages(conversationId)
       await loadConversations()
     } catch (err) {
-      setError(err.response?.data?.body?.[0] || 'No se pudo enviar el mensaje.')
+      setError(getChatError(err, 'No se pudo enviar el mensaje.'))
     } finally {
       setLoading(false)
     }
@@ -255,4 +255,14 @@ export default function Chat() {
       </main>
     </>
   )
+}
+
+const getChatError = (err, fallback) => {
+  if (err.response?.status === 404) {
+    return 'El backend desplegado todavía no tiene activo el módulo de chat. Haz redeploy del backend en Render.'
+  }
+  return err.response?.data?.employee?.[0]
+    || err.response?.data?.body?.[0]
+    || err.response?.data?.detail
+    || fallback
 }
