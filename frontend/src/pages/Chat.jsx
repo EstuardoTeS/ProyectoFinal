@@ -121,7 +121,12 @@ export default function Chat() {
     try {
       setLoading(true)
       setError('')
+      setStatus('')
       let conversationId = selectedId
+      if (!conversationId && role === 'admin' && employeeId) {
+        const conversation = await startConversation()
+        conversationId = conversation?.id
+      }
       if (!conversationId && role === 'employee') {
         const conversation = await api.post('/chat/conversations/', { subject: 'Indicaciones' })
         conversationId = conversation.data.id
@@ -244,9 +249,9 @@ export default function Chat() {
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
                 placeholder="Escribe una indicación..."
-                disabled={!selectedConversation && role !== 'employee'}
+                disabled={!selectedConversation && role !== 'employee' && !employeeId}
               />
-              <button className="chat-button" disabled={loading || (!selectedConversation && role !== 'employee') || !message.trim()}>
+              <button className="chat-button" disabled={loading || (!selectedConversation && role !== 'employee' && !employeeId) || !message.trim()}>
                 Enviar
               </button>
             </form>

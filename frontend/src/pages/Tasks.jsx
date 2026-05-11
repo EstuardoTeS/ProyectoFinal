@@ -123,12 +123,6 @@ export default function Tasks() {
         },
       }))
     : taskHistoryItems
-  const projectHistory = historyItems.reduce((groups, item) => {
-    const projectName = item.task.project_name || 'Sin proyecto'
-    if (!groups[projectName]) groups[projectName] = []
-    groups[projectName].push(item)
-    return groups
-  }, {})
   const formatHistoryDate = (value) => new Date(value).toLocaleString('es-GT', {
     day:'2-digit',
     month:'2-digit',
@@ -215,63 +209,13 @@ export default function Tasks() {
           <section style={styles.historyPanel}>
             <div style={styles.historyHead}>
               <div>
-                <span className="app-page-kicker">Historial</span>
-                <h3 style={styles.historyTitle}>Historial general por proyecto</h3>
-                <p style={styles.historyIntro}>Registro cronológico de cambios de estado, fecha, hora, tarea, responsable y usuario que realizó el movimiento.</p>
+                <span className="app-page-kicker">Auditoría</span>
+                <h3 style={styles.historyTitle}>Historial general de proyectos</h3>
+                <p style={styles.historyIntro}>Consulta todos los cambios de estado por proyecto, tarea, empleado, fecha y hora en una ventana independiente.</p>
               </div>
-              <span style={styles.historyCount}>{historyItems.length} movimientos</span>
-            </div>
-            <div style={styles.projectHistoryList}>
-              {historyItems.length === 0 ? (
-                <p style={styles.historyEmpty}>Aún no hay movimientos históricos registrados.</p>
-              ) : Object.entries(projectHistory).map(([projectName, items]) => (
-                <article key={projectName} style={styles.projectHistoryCard}>
-                  <div style={styles.projectHistoryHeader}>
-                    <div>
-                      <span style={styles.projectHistoryKicker}>Proyecto</span>
-                      <strong style={styles.projectHistoryName}>{projectName}</strong>
-                      <small style={styles.historyMeta}>{items[0]?.task.client_name || 'Sin cliente registrado'}</small>
-                    </div>
-                    <span style={styles.historyCount}>{items.length} cambios</span>
-                  </div>
-                  <div style={styles.historyTableWrap}>
-                    <table style={styles.historyTable}>
-                      <thead>
-                        <tr>
-                          <th style={styles.historyTh}>Fecha y hora</th>
-                          <th style={styles.historyTh}>Tarea</th>
-                          <th style={styles.historyTh}>Cambio de estado</th>
-                          <th style={styles.historyTh}>Empleado</th>
-                          <th style={styles.historyTh}>Modificado por</th>
-                          <th style={styles.historyTh}>Nota</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {items.map(item => (
-                          <tr key={`${item.task.id}-${item.id}`}>
-                            <td style={styles.historyTd}>{formatHistoryDate(item.created_at)}</td>
-                            <td style={styles.historyTd}><strong style={styles.historyTask}>{item.task.title}</strong></td>
-                            <td style={styles.historyTd}>
-                              {item.action === 'status_changed' ? (
-                                <span style={styles.statusFlow}>
-                                  {item.previous_status_label || 'Sin estado'}
-                                  <strong>→</strong>
-                                  {item.new_status_label || 'Sin estado'}
-                                </span>
-                              ) : (
-                                <span style={styles.statusFlow}>{item.action_label}</span>
-                              )}
-                            </td>
-                            <td style={styles.historyTd}>{item.task.assigned_to_username || 'Sin asignar'}</td>
-                            <td style={styles.historyTd}>{item.changed_by_username || 'Sistema'}</td>
-                            <td style={styles.historyTd}>{item.note || '-'}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </article>
-              ))}
+              <button type="button" style={styles.auditBtn} onClick={() => window.open('/audit', '_blank', 'noopener,noreferrer')}>
+                Abrir auditoría en nueva ventana
+              </button>
             </div>
           </section>
         )}
@@ -486,14 +430,5 @@ const styles = {
   cardHistoryTop:{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:10, color:'#082f57', marginBottom:10 },
   miniTimeline:{ display:'grid', gap:8 },
   miniHistoryItem:{ display:'flex', gap:10, alignItems:'flex-start' },
-  projectHistoryList:{ display:'grid', gap:14 },
-  projectHistoryCard:{ background:'#fff', border:'1px solid #efe8d4', borderRadius:12, overflow:'hidden', boxShadow:'0 10px 24px rgba(8,47,87,0.06)' },
-  projectHistoryHeader:{ display:'flex', justifyContent:'space-between', gap:12, alignItems:'center', padding:'14px 16px', background:'linear-gradient(135deg,#fff8e9,#fffdfa)' },
-  projectHistoryKicker:{ display:'block', color:'#e36800', fontSize:11, fontWeight:900, textTransform:'uppercase', marginBottom:3 },
-  projectHistoryName:{ display:'block', color:'#082f57', fontSize:16, fontWeight:900 },
-  historyTableWrap:{ overflowX:'auto' },
-  historyTable:{ width:'100%', borderCollapse:'collapse', minWidth:900 },
-  historyTh:{ background:'#082f57', color:'#fffdfa', padding:'11px 12px', textAlign:'left', fontSize:11, textTransform:'uppercase', letterSpacing:'0.03em' },
-  historyTd:{ padding:'12px', borderTop:'1px solid #efe8d4', color:'#31546e', fontSize:13, verticalAlign:'top' },
-  statusFlow:{ display:'inline-flex', alignItems:'center', gap:7, color:'#117b82', fontWeight:850, whiteSpace:'nowrap' },
+  auditBtn:    { border:'none', background:'linear-gradient(135deg,#082f57,#117b82)', color:'#fffdfa', borderRadius:10, padding:'11px 14px', fontWeight:900, cursor:'pointer', boxShadow:'0 10px 24px rgba(8,47,87,0.18)' },
 }

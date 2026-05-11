@@ -7,6 +7,7 @@ import Projects  from './pages/Projects'
 import Tasks     from './pages/Tasks'
 import Users from './pages/Users'
 import Chat from './pages/Chat'
+import Audit from './pages/Audit'
 
 const PrivateRoute = ({ children }) => {
   return localStorage.getItem('token') ? children : <Navigate to="/login" />
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/projects"  element={<PrivateRoute><Projects /></PrivateRoute>} />
         <Route path="/tasks"     element={<PrivateRoute><Tasks /></PrivateRoute>} />
         <Route path="/chat"      element={<PrivateRoute><Chat /></PrivateRoute>} />
+        <Route path="/audit"     element={<PrivateRoute><Audit /></PrivateRoute>} />
         <Route path="*"          element={<Navigate to="/" />} />
         <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
       </Routes>
