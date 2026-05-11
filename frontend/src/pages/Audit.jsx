@@ -10,6 +10,13 @@ const formatDate = (value) => new Date(value).toLocaleString('es-GT', {
   minute:'2-digit',
 })
 
+const statusLabel = {
+  pending:'Pendiente',
+  in_progress:'En proceso',
+  completed:'Finalizada',
+  cancelled:'Cancelada',
+}
+
 export default function Audit() {
   const role = localStorage.getItem('role')
   const [history, setHistory] = useState([])
@@ -22,9 +29,41 @@ export default function Audit() {
         const res = await api.get('/tasks/history/')
         setHistory(res.data)
       } catch (err) {
-        setMsg(err.response?.status === 404
-          ? 'El backend desplegado aún no tiene activo el endpoint de auditoría. Haz redeploy en Render.'
-          : 'No se pudo cargar el historial de auditoría.')
+        try {
+          const tasksRes = await api.get('/tasks/')
+          const fallbackHistory = tasksRes.data.flatMap(task => {
+            const realHistory = (task.history ?? []).map(item => ({
+              ...item,
+              task_title: task.title,
+              project_name: task.project_name,
+              client_name: task.client_name,
+              assigned_to_username: task.assigned_to_username,
+            }))
+
+            if (realHistory.length > 0) return realHistory
+
+            return [{
+              id: `task-${task.id}`,
+              action: 'current_snapshot',
+              action_label: 'Estado actual registrado',
+              previous_status_label: '',
+              new_status_label: statusLabel[task.status] ?? task.status,
+              changed_by_username: task.assigned_to_username || 'Sistema',
+              task_title: task.title,
+              project_name: task.project_name,
+              client_name: task.client_name,
+              assigned_to_username: task.assigned_to_username,
+              note: task.progress_note || `Avance actual: ${task.progress ?? 0}%`,
+              created_at: task.updated_at || task.created_at,
+            }]
+          })
+          setHistory(fallbackHistory)
+          setMsg('Vista de auditoría generada desde el estado actual de las tareas.')
+        } catch {
+          setMsg(err.response?.status === 404
+            ? 'El backend desplegado aún no tiene activo el endpoint de auditoría.'
+            : 'No se pudo cargar el historial de auditoría.')
+        }
       }
     }
     if (role === 'admin') load()

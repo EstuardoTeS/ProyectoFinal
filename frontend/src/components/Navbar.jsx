@@ -17,7 +17,6 @@ export default function Navbar() {
     ...(role === 'admin' ? [{ to:'/clients', icon:'◎', label:'Clientes' }] : []),
     ...(role !== 'employee' ? [{ to:'/projects', icon:'▣', label: role === 'client' ? 'Mis proyectos' : 'Proyectos' }] : []),
     { to:'/tasks', icon:'✓', label:'Tareas' },
-    ...(role === 'admin' || role === 'employee' ? [{ to:'/chat', icon:'✉', label:'Chat' }] : []),
     ...(role === 'admin' ? [{ to:'/audit', icon:'◷', label:'Auditoría' }] : []),
     ...(role === 'admin' ? [{ to:'/users', icon:'◆', label:'Empleados' }] : []),
     ...(role === 'admin' ? [{ to:'http://127.0.0.1:8000/admin/', icon:'⚙', label:'Panel Admin', external:true }] : []),

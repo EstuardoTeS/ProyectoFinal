@@ -6,7 +6,6 @@ import Clients   from './pages/Clients'
 import Projects  from './pages/Projects'
 import Tasks     from './pages/Tasks'
 import Users from './pages/Users'
-import Chat from './pages/Chat'
 import Audit from './pages/Audit'
 
 const PrivateRoute = ({ children }) => {
@@ -23,7 +22,6 @@ export default function App() {
         <Route path="/clients"   element={<PrivateRoute><Clients /></PrivateRoute>} />
         <Route path="/projects"  element={<PrivateRoute><Projects /></PrivateRoute>} />
         <Route path="/tasks"     element={<PrivateRoute><Tasks /></PrivateRoute>} />
-        <Route path="/chat"      element={<PrivateRoute><Chat /></PrivateRoute>} />
         <Route path="/audit"     element={<PrivateRoute><Audit /></PrivateRoute>} />
         <Route path="*"          element={<Navigate to="/" />} />
         <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
