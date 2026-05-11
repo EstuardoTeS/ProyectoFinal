@@ -118,8 +118,18 @@ export default function Projects() {
   return (
     <div>
       <Navbar />
-      <div style={styles.page}>
-        <h2 style={styles.title}>{isClient ? 'Mis proyectos' : 'Proyectos'}</h2>
+      <div className="app-page" style={styles.page}>
+        <header className="app-page-header">
+          <div>
+            <span className="app-page-kicker">Portafolio</span>
+            <h2 style={styles.title}>{isClient ? 'Mis proyectos' : 'Proyectos'}</h2>
+            <p className="app-page-subtitle">
+              {isClient
+                ? 'Consulta avances, responsables y reportes de los proyectos vinculados a tu empresa.'
+                : 'Organiza entregas, fechas y clientes con tarjetas listas para revisar de un vistazo.'}
+            </p>
+          </div>
+        </header>
         {msg && <p style={styles.msg}>{msg}</p>}
 
         {isAdmin && (

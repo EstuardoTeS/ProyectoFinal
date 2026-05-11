@@ -1,6 +1,8 @@
 .home-shell {
   min-height: 100vh;
-  background: #f8fafc;
+  background:
+    linear-gradient(90deg, rgba(239, 232, 212, 0.72) 0 23%, transparent 23% 100%),
+    #fffdfa;
 }
 
 .home-topbar {
@@ -10,8 +12,8 @@
   justify-content: space-between;
   gap: 18px;
   padding: 0.75rem clamp(1rem, 4vw, 2rem);
-  background: rgba(255, 255, 255, 0.94);
-  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(90deg, #041c34 0%, #082f57 100%);
+  border-bottom: 1px solid rgba(239, 232, 212, 0.12);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -23,7 +25,7 @@
   align-items: center;
   gap: 12px;
   min-width: 0;
-  color: #111827;
+  color: #fff8e9;
   text-decoration: none;
 }
 
@@ -32,7 +34,7 @@
   height: 42px;
   min-width: 42px;
   border-radius: 9px;
-  background: #111827;
+  background: linear-gradient(135deg, #2aa2a5, #ff8500);
   color: #fff;
   display: grid;
   place-items: center;
@@ -47,7 +49,7 @@
 
 .home-brand-sub {
   display: block;
-  color: #64748b;
+  color: #f2dfb8;
   font-size: 12px;
   margin-top: 1px;
 }
@@ -60,7 +62,7 @@
 }
 
 .home-nav-link {
-  color: #475569;
+  color: rgba(255, 253, 247, 0.78);
   text-decoration: none;
   font-size: 14px;
   font-weight: 750;
@@ -82,10 +84,10 @@
 
 .home-login-btn {
   color: #fff;
-  background: #2563eb;
+  background: linear-gradient(135deg, #ff8500 0%, #e36800 100%);
   padding: 0 15px;
   font-size: 14px;
-  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.22);
+  box-shadow: 0 10px 20px rgba(255, 133, 0, 0.25);
 }
 
 .home-menu-icon {
@@ -111,7 +113,9 @@
 .home-hero-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(8, 13, 27, 0.92) 0%, rgba(8, 13, 27, 0.74) 42%, rgba(8, 13, 27, 0.18) 100%);
+  background:
+    radial-gradient(circle at 78% 24%, rgba(255, 133, 0, 0.34), transparent 280px),
+    linear-gradient(90deg, rgba(4, 28, 52, 0.96) 0%, rgba(8, 47, 87, 0.82) 46%, rgba(42, 162, 165, 0.34) 100%);
 }
 
 .home-hero-content {
@@ -126,9 +130,9 @@
 
 .home-eyebrow {
   display: inline-flex;
-  color: #bfdbfe;
-  background: rgba(37, 99, 235, 0.22);
-  border: 1px solid rgba(191, 219, 254, 0.28);
+  color: #fff8e9;
+  background: rgba(42, 162, 165, 0.28);
+  border: 1px solid rgba(239, 232, 212, 0.28);
   padding: 7px 10px;
   border-radius: 8px;
   font-size: 13px;
@@ -161,9 +165,9 @@
 
 .home-primary-btn {
   padding: 0 18px;
-  background: #2563eb;
+  background: linear-gradient(135deg, #ff8500 0%, #e36800 100%);
   color: #fff;
-  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.28);
+  box-shadow: 0 12px 26px rgba(255, 133, 0, 0.28);
 }
 
 .home-secondary-btn {
@@ -177,7 +181,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1px;
-  background: #e5e7eb;
+  background: #e4dac1;
   width: min(1180px, calc(100% - 2rem));
   margin: -42px auto 0;
   position: relative;
@@ -188,7 +192,7 @@
 }
 
 .home-stat-item {
-  background: #fff;
+  background: #fffdfa;
   padding: 1.35rem;
   display: flex;
   flex-direction: column;
@@ -198,11 +202,11 @@
 .home-stat-value {
   font-size: 28px;
   font-weight: 900;
-  color: #111827;
+  color: #082f57;
 }
 
 .home-stat-label {
-  color: #64748b;
+  color: #658094;
   font-size: 13px;
   font-weight: 750;
 }
@@ -698,4 +702,126 @@ body.native-app #servicios h3 {
 body.native-app #contacto {
   background: #0a1b31 !important;
   border: 1px solid rgba(102, 180, 225, 0.16);
+}
+
+.home-topbar,
+.home-hero-content,
+.home-stats-band,
+.home-stat-item,
+#servicios article,
+#empresa > div:last-child,
+#contacto {
+  animation: home-rise-in 0.68s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.home-nav-link,
+.home-login-btn,
+.home-primary-btn,
+.home-secondary-btn,
+#servicios article {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.home-nav-link:hover,
+.home-login-btn:hover,
+.home-primary-btn:hover,
+.home-secondary-btn:hover {
+  transform: translateY(-2px);
+}
+
+#servicios article:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 42px rgba(8, 47, 87, 0.16) !important;
+}
+
+body.native-app .home-shell {
+  background:
+    radial-gradient(circle at 78% 12%, rgba(255, 133, 0, 0.2), transparent 160px),
+    radial-gradient(circle at 15% 94%, rgba(42, 162, 165, 0.16), transparent 150px),
+    #041c34;
+}
+
+body.native-app .home-topbar,
+body.native-app .home-hero {
+  background: #041c34;
+}
+
+body.native-app .home-brand-mark {
+  background: linear-gradient(135deg, #2aa2a5, #ff8500);
+  color: #ffffff;
+  border: 1px solid rgba(239, 232, 212, 0.2);
+}
+
+body.native-app .home-brand-sub,
+body.native-app .home-hero-text,
+body.native-app #servicios p,
+body.native-app #empresa p {
+  color: #cfdae0 !important;
+}
+
+body.native-app .home-menu-icon {
+  background: rgba(239, 232, 212, 0.1);
+  color: #fff8e9;
+  border: 1px solid rgba(239, 232, 212, 0.14);
+}
+
+body.native-app .home-hero-shade {
+  background:
+    radial-gradient(circle at 82% 12%, rgba(255, 133, 0, 0.18), transparent 180px),
+    linear-gradient(180deg, rgba(4, 28, 52, 0.1) 0%, #041c34 58%, #041c34 100%);
+}
+
+body.native-app .home-eyebrow {
+  color: #fff8e9;
+  background: rgba(42, 162, 165, 0.34);
+  border-color: rgba(239, 232, 212, 0.24);
+}
+
+body.native-app .home-primary-btn,
+body.native-app #contacto .home-primary-btn {
+  background: linear-gradient(135deg, #ff8500 0%, #e36800 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 32px rgba(255, 133, 0, 0.34);
+}
+
+body.native-app .home-secondary-btn {
+  color: #ffffff;
+  background: rgba(239, 232, 212, 0.08);
+  border-color: rgba(239, 232, 212, 0.72);
+}
+
+body.native-app #servicios,
+body.native-app #empresa {
+  background: #041c34 !important;
+}
+
+body.native-app #servicios article,
+body.native-app #empresa > div:last-child,
+body.native-app #contacto {
+  background: #082f57 !important;
+  border-color: rgba(239, 232, 212, 0.14) !important;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.26) !important;
+}
+
+body.native-app #servicios article:nth-child(1) span {
+  color: #2aa2a5;
+}
+
+body.native-app #servicios article:nth-child(2) span {
+  color: #ff8500;
+}
+
+body.native-app #servicios article:nth-child(3) span {
+  color: #efe8d4;
+}
+
+@keyframes home-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

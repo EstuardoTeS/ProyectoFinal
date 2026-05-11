@@ -243,19 +243,20 @@ body.native-app table {
 }
 
 body.native-app {
-  background: #061527;
+  background: #041c34;
   color: #f8fbff;
 }
 
 body.native-app #root {
   background:
-    radial-gradient(circle at 18% 0%, rgba(54, 151, 205, 0.18), transparent 220px),
-    linear-gradient(180deg, #07182d 0%, #04101f 100%);
+    radial-gradient(circle at 18% 0%, rgba(42, 162, 165, 0.2), transparent 220px),
+    radial-gradient(circle at 92% 22%, rgba(255, 133, 0, 0.14), transparent 180px),
+    linear-gradient(180deg, #082f57 0%, #041c34 100%);
 }
 
 body.native-app .app-navbar {
-  background: linear-gradient(180deg, #08213c 0%, #061527 100%) !important;
-  border-bottom: 1px solid rgba(88, 166, 214, 0.2) !important;
+  background: linear-gradient(180deg, #082f57 0%, #041c34 100%) !important;
+  border-bottom: 1px solid rgba(239, 232, 212, 0.14) !important;
 }
 
 body.native-app .app-navbar-brand span:first-child,
@@ -266,21 +267,21 @@ body.native-app strong {
 }
 
 body.native-app .app-navbar-brand span:last-child {
-  background: #2f8ac4 !important;
-  color: #eaf7ff !important;
+  background: #ff8500 !important;
+  color: #ffffff !important;
 }
 
 body.native-app .app-navbar + div[style] {
   background:
-    radial-gradient(circle at 100% 10%, rgba(58, 148, 203, 0.16), transparent 170px),
-    #061527 !important;
+    radial-gradient(circle at 100% 10%, rgba(255, 133, 0, 0.14), transparent 170px),
+    #041c34 !important;
 }
 
 body.native-app form[style],
 body.native-app div[style*="box-shadow"],
 body.native-app table {
-  background: #0d223d !important;
-  border-color: rgba(102, 180, 225, 0.16) !important;
+  background: #082f57 !important;
+  border-color: rgba(239, 232, 212, 0.14) !important;
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28) !important;
 }
 
@@ -288,20 +289,20 @@ body.native-app p[style],
 body.native-app span[style],
 body.native-app label[style],
 body.native-app td[style] {
-  color: #b9c9da !important;
+  color: #cfdae0 !important;
 }
 
 body.native-app th[style] {
-  background: #0a1b31 !important;
-  color: #7fb8dc !important;
-  border-color: rgba(102, 180, 225, 0.12) !important;
+  background: #041c34 !important;
+  color: #f2dfb8 !important;
+  border-color: rgba(239, 232, 212, 0.12) !important;
 }
 
 body.native-app input,
 body.native-app select,
 body.native-app textarea {
-  background: #081a30 !important;
-  border: 1px solid rgba(119, 188, 226, 0.2) !important;
+  background: #041c34 !important;
+  border: 1px solid rgba(239, 232, 212, 0.2) !important;
   color: #f8fbff !important;
 }
 
@@ -310,11 +311,15 @@ body.native-app textarea::placeholder {
   color: #6f849a !important;
 }
 
-body.native-app button[style],
+body.native-app button[style*="#2563eb"],
+body.native-app button[style*="#1a73e8"],
+body.native-app button[style*="#0f9d58"],
+body.native-app button[style*="#f4b400"],
+body.native-app button[style*="#9c27b0"],
 body.native-app a[style*="background"] {
-  background: linear-gradient(135deg, #2f8ac4 0%, #2563eb 100%) !important;
+  background: linear-gradient(135deg, #ff8500 0%, #e36800 100%) !important;
   color: #ffffff !important;
-  box-shadow: 0 12px 26px rgba(47, 138, 196, 0.25) !important;
+  box-shadow: 0 12px 26px rgba(255, 133, 0, 0.24) !important;
 }
 
 body.native-app button[style*="background:#e53e3e"],
@@ -323,8 +328,8 @@ body.native-app button[style*="background: '#e53e3e'"] {
 }
 
 body.native-app .native-tabbar {
-  background: rgba(4, 16, 31, 0.96);
-  border-color: rgba(102, 180, 225, 0.16);
+  background: rgba(4, 28, 52, 0.96);
+  border-color: rgba(239, 232, 212, 0.16);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.38);
 }
 
@@ -333,10 +338,104 @@ body.native-app .native-tabbar-item {
 }
 
 body.native-app .native-tabbar-item.is-active {
-  background: linear-gradient(135deg, #2f8ac4 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #2aa2a5 0%, #ff8500 100%);
   color: #ffffff;
 }
 
 body.native-app .native-tabbar-icon {
   filter: saturate(1.15);
+}
+
+body.native-app .app-navbar-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+body.native-app .app-navbar-mark {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 9px !important;
+  background: linear-gradient(135deg, #2aa2a5, #ff8500) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(239, 232, 212, 0.18) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  overflow: visible !important;
+}
+
+body.native-app .app-navbar-brand-text {
+  display: grid !important;
+  gap: 1px !important;
+  min-width: 0 !important;
+  background: transparent !important;
+}
+
+body.native-app .app-navbar-brand-name {
+  max-width: 190px !important;
+  overflow: hidden !important;
+  color: #ffffff !important;
+  font-size: clamp(18px, 5vw, 22px) !important;
+  font-weight: 900 !important;
+  line-height: 1.05 !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  background: transparent !important;
+}
+
+body.native-app .app-navbar-brand-sub {
+  display: block !important;
+  width: fit-content !important;
+  padding: 2px 7px !important;
+  border-radius: 7px !important;
+  background: #ff8500 !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 850 !important;
+  line-height: 1.2 !important;
+}
+
+body.native-app .app-navbar-user {
+  display: none !important;
+}
+
+body.native-app .app-navbar-logout {
+  padding: 8px 12px !important;
+  border: 0 !important;
+  border-radius: 9px !important;
+  background: linear-gradient(135deg, #ff8500 0%, #e36800 100%) !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+}
+
+body.native-app .app-navbar,
+body.native-app .app-navbar + div[style],
+body.native-app form[style],
+body.native-app table,
+body.native-app .native-tabbar {
+  animation: native-rise-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+body.native-app .native-tabbar-item {
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+body.native-app .native-tabbar-item:active,
+body.native-app button:active {
+  transform: scale(0.96);
+}
+
+@keyframes native-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

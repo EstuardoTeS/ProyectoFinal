@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from rest_framework.exceptions import PermissionDenied
 from django.db.models import Count, Q
-from .models import Task
+from .models import Task, TaskHistory
 from .serializers import EmployeeTaskStatusSerializer, TaskSerializer
 from users.models import User
 
@@ -10,7 +10,12 @@ class TaskViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        qs = Task.objects.select_related('project', 'project__client', 'assigned_to', 'created_by').order_by('-created_at')
+        qs = (
+            Task.objects
+            .select_related('project', 'project__client', 'assigned_to', 'created_by')
+            .prefetch_related('history', 'history__changed_by')
+            .order_by('-created_at')
+        )
         project_id = self.request.query_params.get('project')
         if project_id:
             qs = qs.filter(project_id=project_id)
@@ -40,20 +45,51 @@ class TaskViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         user = self.request.user
         if user.role == 'admin':
-            serializer.save(created_by=user)
+            task = serializer.save(created_by=user)
+            TaskHistory.objects.create(
+                task=task,
+                action='created',
+                new_status=task.status,
+                changed_by=user,
+                note='Tarea creada en el sistema.',
+            )
             return
         raise PermissionDenied('Solo el administrador puede crear tareas.')
 
     def perform_update(self, serializer):
         user = self.request.user
         task = self.get_object()
+        previous_status = task.status
         if user.role == 'admin':
-            serializer.save()
+            updated_task = serializer.save()
+            self._create_history_entry(updated_task, previous_status, user)
             return
         if user.role == 'employee' and task.assigned_to_id == user.id:
-            serializer.save()
+            updated_task = serializer.save()
+            self._create_history_entry(updated_task, previous_status, user)
             return
         raise PermissionDenied('No tienes permiso para modificar esta tarea.')
+
+    def _create_history_entry(self, task, previous_status, user):
+        if previous_status != task.status:
+            TaskHistory.objects.create(
+                task=task,
+                action='status_changed',
+                previous_status=previous_status,
+                new_status=task.status,
+                changed_by=user,
+                note=task.progress_note or '',
+            )
+            return
+
+        TaskHistory.objects.create(
+            task=task,
+            action='updated',
+            previous_status=task.status,
+            new_status=task.status,
+            changed_by=user,
+            note=task.progress_note or 'Tarea actualizada.',
+        )
 
     def perform_destroy(self, instance):
         if self.request.user.role != 'admin':

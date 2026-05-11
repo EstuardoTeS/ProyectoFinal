@@ -54,8 +54,8 @@ export default function Login() {
   }
 
   return (
-    <div style={styles.bg}>
-      <div style={styles.card}>
+    <div className="login-screen" style={styles.bg}>
+      <div className="login-card" style={styles.card}>
         <h1 style={styles.title}>TechSolutions</h1>
         <p style={styles.sub}>Sistema de gestión empresarial</p>
 
@@ -119,18 +119,18 @@ export default function Login() {
 
 const styles = {
   bg:        { minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', padding:24 },
-  card:      { background:'#fff', borderRadius:12, padding:'2.25rem 2rem', width:390, boxShadow:'0 24px 60px rgba(15,23,42,0.18)', border:'1px solid #e5e7eb' },
-  title:     { margin:0, fontSize:28, fontWeight:850, color:'#111827', textAlign:'center', letterSpacing:0 },
-  sub:       { margin:'6px 0 22px', fontSize:13, color:'#64748b', textAlign:'center' },
-  tabs:      { display:'flex', marginBottom:20, background:'#f1f5f9', padding:4, borderRadius:9 },
-  tab:       { flex:1, padding:'9px', background:'transparent', border:'none', cursor:'pointer', fontSize:13, color:'#64748b', fontWeight:750, borderRadius:7 },
-  tabActive: { color:'#111827', background:'#fff', boxShadow:'0 2px 8px rgba(15,23,42,0.08)' },
+  card:      { background:'#fffdfa', borderRadius:12, padding:'2.25rem 2rem', width:390, boxShadow:'0 24px 60px rgba(8,47,87,0.2)', border:'1px solid #e4dac1' },
+  title:     { margin:0, fontSize:28, fontWeight:850, color:'#082f57', textAlign:'center', letterSpacing:0 },
+  sub:       { margin:'6px 0 22px', fontSize:13, color:'#658094', textAlign:'center' },
+  tabs:      { display:'flex', marginBottom:20, background:'#f3ead4', padding:4, borderRadius:9 },
+  tab:       { flex:1, padding:'9px', background:'transparent', border:'none', cursor:'pointer', fontSize:13, color:'#658094', fontWeight:750, borderRadius:7 },
+  tabActive: { color:'#082f57', background:'#fffdfa', boxShadow:'0 2px 8px rgba(8,47,87,0.1)' },
   alert:     { padding:'10px 14px', borderRadius:8, fontSize:13, marginBottom:12, border:'1px solid transparent' },
   form:      { display:'flex', flexDirection:'column', gap:10 },
-  label:     { fontSize:13, color:'#475569', fontWeight:750 },
-  input:     { padding:'10px 12px', borderRadius:8, border:'1px solid #d7dee8', fontSize:14, outline:'none', background:'#fff' },
+  label:     { fontSize:13, color:'#31546e', fontWeight:750 },
+  input:     { padding:'10px 12px', borderRadius:8, border:'1px solid #e4dac1', fontSize:14, outline:'none', background:'#fffdfa' },
   passwordWrap:{ position:'relative', display:'flex', alignItems:'center' },
   passwordInput:{ width:'100%', paddingRight:74 },
-  eyeBtn:    { position:'absolute', right:6, top:6, bottom:6, border:'none', borderRadius:7, background:'#e2e8f0', color:'#0f172a', padding:'0 12px', fontSize:12, fontWeight:800, cursor:'pointer' },
-  btn:       { marginTop:8, padding:11, borderRadius:8, background:'#2563eb', color:'#fff', fontWeight:750, fontSize:15, border:'none', cursor:'pointer', boxShadow:'0 10px 20px rgba(37,99,235,0.22)' },
+  eyeBtn:    { position:'absolute', right:6, top:6, bottom:6, border:'none', borderRadius:7, background:'#efe8d4', color:'#082f57', padding:'0 12px', fontSize:12, fontWeight:800, cursor:'pointer' },
+  btn:       { marginTop:8, padding:11, borderRadius:8, background:'#ff8500', color:'#fff', fontWeight:750, fontSize:15, border:'none', cursor:'pointer', boxShadow:'0 10px 20px rgba(255,133,0,0.24)' },
 }

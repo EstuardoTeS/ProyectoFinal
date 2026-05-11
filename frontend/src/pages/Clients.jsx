@@ -52,8 +52,14 @@ export default function Clients() {
   return (
     <div>
       <Navbar />
-      <div style={styles.page}>
-        <h2 style={styles.title}>Clientes</h2>
+      <div className="app-page" style={styles.page}>
+        <header className="app-page-header">
+          <div>
+            <span className="app-page-kicker">CRM</span>
+            <h2 style={styles.title}>Clientes</h2>
+            <p className="app-page-subtitle">Administra contactos, empresas y estado comercial desde una vista limpia para consultar rápido.</p>
+          </div>
+        </header>
         {msg && <p style={styles.msg}>{msg}</p>}
 
         {role === 'admin' && (

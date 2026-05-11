@@ -11,6 +11,7 @@ export default function Tasks() {
   const [form, setForm] = useState(empty)
   const [editing, setEditing] = useState(null)
   const [msg, setMsg] = useState('')
+  const [reportTask, setReportTask] = useState(null)
   const role = localStorage.getItem('role')
   const canCreate = role === 'admin'
   const isAdmin = role === 'admin'
@@ -90,19 +91,126 @@ export default function Tasks() {
     setMsg('Tarea actualizada')
   }
 
+  const openReport = (task) => {
+    setReportTask(task)
+    window.setTimeout(() => window.print(), 120)
+  }
+
   const priorityColor = { low:'#0f9d58', medium:'#f4b400', high:'#e53e3e' }
   const priorityLabel = { low:'Baja', medium:'Media', high:'Alta' }
   const statusLabel = { pending:'Pendiente', in_progress:'En proceso', completed:'Finalizada', cancelled:'Cancelada' }
   const statusColor = { pending:'#f59e0b', in_progress:'#2563eb', completed:'#16a34a', cancelled:'#ef4444' }
   const statusBg = { pending:'#fef3c7', in_progress:'#dbeafe', completed:'#dcfce7', cancelled:'#fee2e2' }
   const statusText = { pending:'#92400e', in_progress:'#1d4ed8', completed:'#166534', cancelled:'#991b1b' }
+  const historyItems = tasks.flatMap(task => (task.history ?? []).map(item => ({ ...item, task })))
 
   return (
     <div>
       <Navbar />
-      <div style={styles.page}>
-        <h2 style={styles.title}>{isEmployee ? 'Mis tareas' : 'Tareas'}</h2>
+      <div className="app-page" style={styles.page}>
+        <section className="task-report-print">
+          {reportTask && (
+            <div className="task-report-sheet">
+              <div className="task-report-top">
+                <div>
+                  <span className="task-report-brand">TechSolutions ERP</span>
+                  <h1>Reporte histórico de tarea</h1>
+                  <p>Documento generado para seguimiento de cambios, estados y trazabilidad operativa.</p>
+                </div>
+                <strong>{new Date().toLocaleDateString('es-GT')}</strong>
+              </div>
+              <div className="task-report-summary">
+                <article>
+                  <span>Tarea</span>
+                  <strong>{reportTask.title}</strong>
+                </article>
+                <article>
+                  <span>Cliente</span>
+                  <strong>{reportTask.client_name || '-'}</strong>
+                </article>
+                <article>
+                  <span>Proyecto</span>
+                  <strong>{reportTask.project_name || '-'}</strong>
+                </article>
+                <article>
+                  <span>Estado actual</span>
+                  <strong>{statusLabel[reportTask.status]}</strong>
+                </article>
+                <article>
+                  <span>Responsable</span>
+                  <strong>{reportTask.assigned_to_username || 'Sin asignar'}</strong>
+                </article>
+                <article>
+                  <span>Avance</span>
+                  <strong>{reportTask.progress ?? 0}%</strong>
+                </article>
+              </div>
+              <h2>Historial de movimientos</h2>
+              <div className="task-report-timeline">
+                {(reportTask.history ?? []).length === 0 ? (
+                  <p>Esta tarea aún no tiene movimientos registrados.</p>
+                ) : reportTask.history.map(item => (
+                  <article key={item.id}>
+                    <span>{new Date(item.created_at).toLocaleString('es-GT')}</span>
+                    <strong>{item.action_label}</strong>
+                    <p>
+                      {item.action === 'status_changed'
+                        ? `${item.previous_status_label || 'Sin estado'} → ${item.new_status_label || 'Sin estado'}`
+                        : item.new_status_label || 'Movimiento registrado'}
+                    </p>
+                    <small>{item.changed_by_username || 'Sistema'}{item.note ? ` · ${item.note}` : ''}</small>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+        <header className="app-page-header">
+          <div>
+            <span className="app-page-kicker">Operación</span>
+            <h2 style={styles.title}>{isEmployee ? 'Mis tareas' : 'Tareas'}</h2>
+            <p className="app-page-subtitle">
+              {isEmployee
+                ? 'Actualiza estados y revisa prioridades para mantener el trabajo al día.'
+                : 'Da seguimiento a prioridades, responsables, vencimientos y avance por tarea.'}
+            </p>
+          </div>
+        </header>
         {msg && <p style={styles.msg}>{msg}</p>}
+
+        {(isAdmin || role === 'client') && (
+          <section style={styles.historyPanel}>
+            <div style={styles.historyHead}>
+              <div>
+                <span className="app-page-kicker">Historial</span>
+                <h3 style={styles.historyTitle}>{isAdmin ? 'Histórico general de tareas' : 'Historial de mis proyectos'}</h3>
+              </div>
+              <span style={styles.historyCount}>{historyItems.length} movimientos</span>
+            </div>
+            <div style={styles.historyList}>
+              {historyItems.length === 0 ? (
+                <p style={styles.historyEmpty}>Aún no hay movimientos históricos registrados.</p>
+              ) : historyItems.slice(0, 8).map(item => (
+                <article key={`${item.task.id}-${item.id}`} style={styles.historyItem}>
+                  <span style={styles.historyDot} />
+                  <div style={{flex:1}}>
+                    <strong style={styles.historyTask}>{item.task.title}</strong>
+                    <p style={styles.historyText}>
+                      {item.action === 'status_changed'
+                        ? `${item.previous_status_label || 'Sin estado'} → ${item.new_status_label || 'Sin estado'}`
+                        : item.action_label}
+                    </p>
+                    <small style={styles.historyMeta}>
+                      {new Date(item.created_at).toLocaleString('es-GT')} · {item.changed_by_username || 'Sistema'}
+                      {item.task.client_name ? ` · ${item.task.client_name}` : ''}
+                    </small>
+                  </div>
+                  <button type="button" style={styles.reportBtn} onClick={() => openReport(item.task)}>PDF</button>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
 
         {canCreate && (
           <form onSubmit={save} style={styles.form}>
@@ -179,6 +287,34 @@ export default function Tasks() {
                 {t.due_date && <span style={styles.meta}>Vence: <strong>{t.due_date}</strong></span>}
               </div>
               {t.progress_note && <p style={styles.note}>{t.progress_note}</p>}
+              {(isAdmin || role === 'client') && (
+                <div style={styles.cardHistory}>
+                  <div style={styles.cardHistoryTop}>
+                    <strong>Historial de cambios</strong>
+                    <button type="button" style={styles.reportBtn} onClick={() => openReport(t)}>Imprimir PDF</button>
+                  </div>
+                  {(t.history ?? []).length === 0 ? (
+                    <p style={styles.historyEmpty}>Sin movimientos registrados.</p>
+                  ) : (
+                    <div style={styles.miniTimeline}>
+                      {(t.history ?? []).slice(0, 4).map(item => (
+                        <div key={item.id} style={styles.miniHistoryItem}>
+                          <span style={styles.historyDot} />
+                          <div>
+                            <strong style={styles.historyText}>{item.action_label}</strong>
+                            <small style={styles.historyMeta}>
+                              {item.action === 'status_changed'
+                                ? ` ${item.previous_status_label || 'Sin estado'} → ${item.new_status_label || 'Sin estado'} · `
+                                : ' '}
+                              {new Date(item.created_at).toLocaleString('es-GT')}
+                            </small>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
               {(isEmployee || isAdmin) && (
                 <div style={styles.updateBox}>
                   <select style={styles.statusSelect} defaultValue={t.status} onChange={e=>updateStatus(t, e.target.value)}>
@@ -235,4 +371,20 @@ const styles = {
   smallInput:  { width:80, padding:'8px 9px', borderRadius:8, border:'1px solid #d7dee8' },
   noteInput:   { flex:1, minWidth:220, padding:'8px 9px', borderRadius:8, border:'1px solid #d7dee8' },
   btnSm:       { padding:'6px 11px', background:'#2563eb', color:'#fff', border:'none', borderRadius:7, cursor:'pointer', fontSize:12, fontWeight:750 },
+  historyPanel:{ background:'#fffdfa', border:'1px solid #e4dac1', borderRadius:12, padding:'1.25rem', marginBottom:24, boxShadow:'0 14px 32px rgba(8,47,87,0.09)' },
+  historyHead: { display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, marginBottom:12 },
+  historyTitle:{ margin:'4px 0 0', fontSize:18, color:'#082f57', fontWeight:850 },
+  historyCount:{ background:'#fff1dd', color:'#e36800', borderRadius:999, padding:'6px 10px', fontSize:12, fontWeight:850 },
+  historyList: { display:'grid', gap:10 },
+  historyItem: { display:'flex', gap:10, alignItems:'center', padding:'12px', borderRadius:10, background:'#fff', border:'1px solid #efe8d4' },
+  historyDot:  { width:10, height:10, borderRadius:999, background:'#ff8500', boxShadow:'0 0 0 4px #fff1dd', flex:'0 0 auto' },
+  historyTask: { display:'block', color:'#082f57', fontSize:14 },
+  historyText: { margin:'3px 0', color:'#31546e', fontSize:13, fontWeight:750 },
+  historyMeta: { color:'#658094', fontSize:12 },
+  historyEmpty:{ margin:0, color:'#658094', fontSize:13 },
+  reportBtn:   { border:'none', background:'linear-gradient(135deg,#ff8500,#e36800)', color:'#fff', borderRadius:999, padding:'8px 12px', fontWeight:850, fontSize:12, cursor:'pointer', boxShadow:'0 8px 18px rgba(255,133,0,0.22)' },
+  cardHistory: { marginTop:12, padding:'12px', borderRadius:10, background:'#fffaf0', border:'1px solid #efe8d4' },
+  cardHistoryTop:{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:10, color:'#082f57', marginBottom:10 },
+  miniTimeline:{ display:'grid', gap:8 },
+  miniHistoryItem:{ display:'flex', gap:10, alignItems:'flex-start' },
 }

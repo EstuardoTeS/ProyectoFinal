@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Navbar from '../components/Navbar'
 import api from '../api/axios'
 import './Chat.css'
@@ -32,38 +32,59 @@ export default function Chat() {
   )
 
   const conversationTitle = (conversation) => {
-    if (!conversation) return 'Selecciona una conversación'
+    if (!conversation) return role === 'employee' ? 'Nuevo chat con administrador' : 'Selecciona una conversación'
     return role === 'admin' ? conversation.employee_username : conversation.admin_username
   }
 
-  const loadConversations = async () => {
+  const loadConversations = useCallback(async () => {
     const res = await api.get('/chat/conversations/')
     setConversations(res.data)
     setSelectedId((current) => current || res.data[0]?.id || null)
-  }
+  }, [])
 
-  const loadEmployees = async () => {
+  const loadEmployees = useCallback(async () => {
     if (role !== 'admin') return
     const res = await api.get('/users/')
     setEmployees(res.data.filter((user) => user.role === 'employee' && user.is_active))
-  }
+  }, [role])
 
-  const loadMessages = async (conversationId) => {
+  const loadMessages = useCallback(async (conversationId) => {
     if (!conversationId) {
       setMessages([])
       return
     }
     const res = await api.get(`/chat/messages/?conversation=${conversationId}`)
     setMessages(res.data)
-  }
-
-  useEffect(() => {
-    loadConversations().catch(() => setError('No se pudieron cargar las conversaciones.'))
-    loadEmployees().catch(() => setError('No se pudo cargar la lista de empleados.'))
   }, [])
 
   useEffect(() => {
-    loadMessages(selectedId).catch(() => setError('No se pudieron cargar los mensajes.'))
+    const loadInitialData = async () => {
+      try {
+        await loadConversations()
+      } catch {
+        setError('No se pudieron cargar las conversaciones.')
+      }
+
+      try {
+        await loadEmployees()
+      } catch {
+        setError('No se pudo cargar la lista de empleados.')
+      }
+    }
+
+    loadInitialData()
+  }, [loadConversations, loadEmployees])
+
+  useEffect(() => {
+    const refreshMessages = async () => {
+      try {
+        await loadMessages(selectedId)
+      } catch {
+        setError('No se pudieron cargar los mensajes.')
+      }
+    }
+
+    refreshMessages()
     if (!selectedId) return undefined
 
     const interval = window.setInterval(() => {
@@ -71,7 +92,7 @@ export default function Chat() {
       loadConversations().catch(() => {})
     }, 10000)
     return () => window.clearInterval(interval)
-  }, [selectedId])
+  }, [loadConversations, loadMessages, selectedId])
 
   const startConversation = async () => {
     try {
@@ -84,8 +105,10 @@ export default function Chat() {
       setSelectedId(res.data.id)
       setEmployeeId('')
       setStatus('Conversación lista.')
+      return res.data
     } catch (err) {
       setError(err.response?.data?.employee?.[0] || err.response?.data?.detail || 'No se pudo iniciar la conversación.')
+      return null
     } finally {
       setLoading(false)
     }
@@ -93,14 +116,24 @@ export default function Chat() {
 
   const sendMessage = async (event) => {
     event.preventDefault()
-    if (!selectedId || !message.trim()) return
+    if (!message.trim()) return
 
     try {
       setLoading(true)
       setError('')
-      await api.post('/chat/messages/', { conversation: selectedId, body: message })
+      let conversationId = selectedId
+      if (!conversationId && role === 'employee') {
+        const conversation = await api.post('/chat/conversations/', { subject: 'Indicaciones' })
+        conversationId = conversation.data.id
+        setSelectedId(conversationId)
+      }
+      if (!conversationId) {
+        setError('Selecciona o crea una conversación antes de enviar.')
+        return
+      }
+      await api.post('/chat/messages/', { conversation: conversationId, body: message })
       setMessage('')
-      await loadMessages(selectedId)
+      await loadMessages(conversationId)
       await loadConversations()
     } catch (err) {
       setError(err.response?.data?.body?.[0] || 'No se pudo enviar el mensaje.')
@@ -178,12 +211,22 @@ export default function Chat() {
           <section className="chat-card chat-panel">
             <div className="chat-panel-head">
               <h2 className="chat-panel-title">{conversationTitle(selectedConversation)}</h2>
-              <p className="chat-panel-meta">{selectedConversation ? 'Indicaciones y seguimiento interno' : 'Abre o crea una conversación para escribir.'}</p>
+              <p className="chat-panel-meta">
+                {selectedConversation
+                  ? 'Indicaciones y seguimiento interno'
+                  : role === 'employee'
+                    ? 'Escribe tu primer mensaje y se abrirá la conversación automáticamente.'
+                    : 'Selecciona un empleado para abrir una conversación.'}
+              </p>
             </div>
 
             <div className="chat-messages">
               {!selectedConversation ? (
-                <p className="chat-empty">Selecciona una conversación para ver los mensajes.</p>
+                <p className="chat-empty">
+                  {role === 'employee'
+                    ? 'Aún no tienes conversación. Puedes escribir abajo para iniciar el chat con administración.'
+                    : 'Selecciona una conversación para ver los mensajes.'}
+                </p>
               ) : messages.length === 0 ? (
                 <p className="chat-empty">Aún no hay mensajes. Escribe la primera indicación.</p>
               ) : messages.map((item) => (
@@ -201,9 +244,9 @@ export default function Chat() {
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
                 placeholder="Escribe una indicación..."
-                disabled={!selectedConversation}
+                disabled={!selectedConversation && role !== 'employee'}
               />
-              <button className="chat-button" disabled={loading || !selectedConversation || !message.trim()}>
+              <button className="chat-button" disabled={loading || (!selectedConversation && role !== 'employee') || !message.trim()}>
                 Enviar
               </button>
             </form>

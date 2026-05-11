@@ -28,3 +28,31 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class TaskHistory(models.Model):
+    ACTIONS = [
+        ('created', 'Creada'),
+        ('status_changed', 'Cambio de estado'),
+        ('updated', 'Actualizada'),
+    ]
+
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='history')
+    action = models.CharField(max_length=20, choices=ACTIONS)
+    previous_status = models.CharField(max_length=20, choices=Task.STATUS, blank=True)
+    new_status = models.CharField(max_length=20, choices=Task.STATUS, blank=True)
+    changed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='task_history_entries',
+    )
+    note = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.task} - {self.get_action_display()}'

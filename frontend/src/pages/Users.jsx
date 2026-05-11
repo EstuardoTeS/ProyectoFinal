@@ -62,8 +62,14 @@ export default function Users() {
   return (
     <div>
       <Navbar />
-      <div style={styles.page}>
-        <h2 style={styles.title}>Empleados</h2>
+      <div className="app-page" style={styles.page}>
+        <header className="app-page-header">
+          <div>
+            <span className="app-page-kicker">Equipo</span>
+            <h2 style={styles.title}>Empleados</h2>
+            <p className="app-page-subtitle">Gestiona accesos del personal y mantén visible quién está activo en la operación.</p>
+          </div>
+        </header>
         {msg && <p style={styles.msg}>{msg}</p>}
         {error && <p style={{...styles.msg, background:'#fce8e6', color:'#c5221f'}}>{error}</p>}
 
