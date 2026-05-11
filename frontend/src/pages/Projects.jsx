@@ -4,6 +4,13 @@ import api from '../api/axios'
 
 const empty = { name:'', description:'', client:'', start_date:'', end_date:'', status:'planning' }
 
+const escapeHtml = (value) => String(value ?? '')
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&#039;')
+
 export default function Projects() {
   const [projects, setProjects] = useState([])
   const [clients,  setClients]  = useState([])
@@ -66,40 +73,366 @@ export default function Projects() {
   const printReport = async (projectId) => {
     const res = await api.get(`/projects/${projectId}/report/`)
     const { project, summary } = res.data
+    const projectName = escapeHtml(project.name)
+    const projectDescription = escapeHtml(project.description || 'Sin descripción registrada para este proyecto.')
+    const clientName = escapeHtml(project.client_name || 'Asignado')
+    const projectStatus = escapeHtml(statusLabel[project.status] ?? project.status)
+    const generatedAt = new Date().toLocaleString('es-GT', {
+      day:'2-digit',
+      month:'long',
+      year:'numeric',
+      hour:'2-digit',
+      minute:'2-digit',
+    })
     const rows = project.tasks.map(t => `
       <tr>
-        <td>${t.title}</td>
-        <td>${taskStatusLabel[t.status] ?? t.status}</td>
-        <td>${t.assigned_to_username ?? 'Sin asignar'}</td>
-        <td>${t.progress ?? 0}%</td>
+        <td>
+          <strong>${escapeHtml(t.title)}</strong>
+          <span>${escapeHtml(t.description || 'Sin detalle adicional')}</span>
+        </td>
+        <td><span class="status status-${escapeHtml(t.status)}">${escapeHtml(taskStatusLabel[t.status] ?? t.status)}</span></td>
+        <td>${escapeHtml(t.assigned_to_username ?? 'Sin asignar')}</td>
+        <td>
+          <div class="task-progress">
+            <div style="width:${t.progress ?? 0}%"></div>
+          </div>
+          <small>${t.progress ?? 0}% completado</small>
+        </td>
       </tr>
     `).join('')
     const report = window.open('', '_blank')
     report.document.write(`
       <html>
         <head>
-          <title>Reporte - ${project.name}</title>
+          <title>Reporte - ${projectName}</title>
           <style>
-            body { font-family: Arial, sans-serif; padding: 32px; color: #222; }
-            h1 { margin-bottom: 4px; }
-            p { color: #555; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-            th { background: #f4f6f8; }
-            .summary { margin-top: 16px; padding: 12px; background: #f8f9fa; }
+            * { box-sizing: border-box; }
+            body {
+              margin: 0;
+              background: #efe8d4;
+              color: #082f57;
+              font-family: Inter, Segoe UI, Arial, sans-serif;
+            }
+            .page {
+              width: min(1040px, calc(100% - 48px));
+              min-height: calc(100vh - 48px);
+              margin: 24px auto;
+              background: #fffdfa;
+              border: 1px solid #e4dac1;
+              border-radius: 18px;
+              overflow: hidden;
+              box-shadow: 0 24px 70px rgba(8, 47, 87, 0.18);
+            }
+            .hero {
+              background:
+                radial-gradient(circle at 88% 12%, rgba(255, 133, 0, 0.34), transparent 240px),
+                linear-gradient(135deg, #041c34 0%, #082f57 58%, #117b82 100%);
+              color: #fffdfa;
+              padding: 34px 38px;
+              display: flex;
+              justify-content: space-between;
+              gap: 28px;
+              align-items: flex-start;
+            }
+            .brand {
+              display: inline-flex;
+              align-items: center;
+              gap: 10px;
+              font-size: 13px;
+              font-weight: 900;
+              letter-spacing: 0.02em;
+              text-transform: uppercase;
+              color: #f2dfb8;
+              margin-bottom: 24px;
+            }
+            .mark {
+              width: 38px;
+              height: 38px;
+              display: grid;
+              place-items: center;
+              border-radius: 10px;
+              background: linear-gradient(135deg, #2aa2a5, #ff8500);
+              color: #fff;
+              font-weight: 900;
+            }
+            h1 {
+              margin: 0 0 10px;
+              font-size: 34px;
+              line-height: 1.08;
+              letter-spacing: 0;
+            }
+            .description {
+              margin: 0;
+              max-width: 680px;
+              color: rgba(255, 253, 250, 0.78);
+              line-height: 1.55;
+              font-size: 15px;
+            }
+            .date-card {
+              min-width: 190px;
+              background: rgba(255, 253, 250, 0.1);
+              border: 1px solid rgba(239, 232, 212, 0.22);
+              border-radius: 14px;
+              padding: 14px;
+              color: #fffdfa;
+            }
+            .date-card span,
+            .metric span,
+            .project-meta span {
+              display: block;
+              font-size: 11px;
+              font-weight: 900;
+              text-transform: uppercase;
+              color: #f2dfb8;
+              margin-bottom: 5px;
+            }
+            .date-card strong {
+              font-size: 13px;
+              line-height: 1.4;
+            }
+            .content { padding: 30px 38px 36px; }
+            .metrics {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 14px;
+              margin-top: -54px;
+              margin-bottom: 24px;
+              position: relative;
+            }
+            .metric {
+              background: #fffdfa;
+              border: 1px solid #e4dac1;
+              border-radius: 14px;
+              padding: 16px;
+              box-shadow: 0 14px 32px rgba(8, 47, 87, 0.12);
+            }
+            .metric span { color: #658094; }
+            .metric strong {
+              display: block;
+              font-size: 28px;
+              color: #082f57;
+              margin-bottom: 8px;
+            }
+            .metric small {
+              color: #658094;
+              font-weight: 700;
+            }
+            .progress-track {
+              width: 100%;
+              height: 10px;
+              background: #efe8d4;
+              border-radius: 999px;
+              overflow: hidden;
+              margin-top: 8px;
+            }
+            .progress-fill {
+              height: 100%;
+              width: ${summary.progress_percent}%;
+              background: linear-gradient(90deg, #2aa2a5, #ff8500);
+              border-radius: 999px;
+            }
+            .project-meta {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 12px;
+              margin-bottom: 22px;
+            }
+            .project-meta article {
+              background: #fff8e9;
+              border: 1px solid #e4dac1;
+              border-radius: 12px;
+              padding: 13px 14px;
+            }
+            .project-meta strong {
+              color: #082f57;
+              font-size: 14px;
+            }
+            .section-title {
+              display: flex;
+              justify-content: space-between;
+              align-items: end;
+              gap: 16px;
+              margin: 10px 0 14px;
+            }
+            h2 {
+              margin: 0;
+              font-size: 20px;
+              color: #082f57;
+            }
+            .section-title p {
+              margin: 4px 0 0;
+              color: #658094;
+              font-size: 13px;
+            }
+            table {
+              width: 100%;
+              border-collapse: separate;
+              border-spacing: 0;
+              overflow: hidden;
+              border: 1px solid #e4dac1;
+              border-radius: 14px;
+              background: #fffdfa;
+            }
+            th {
+              background: #082f57;
+              color: #fffdfa;
+              font-size: 12px;
+              text-transform: uppercase;
+              letter-spacing: 0.03em;
+              text-align: left;
+              padding: 13px 14px;
+            }
+            td {
+              padding: 14px;
+              border-bottom: 1px solid #efe8d4;
+              vertical-align: middle;
+              color: #31546e;
+              font-size: 14px;
+            }
+            tr:last-child td { border-bottom: 0; }
+            td strong {
+              display: block;
+              color: #082f57;
+              margin-bottom: 4px;
+            }
+            td span {
+              display: block;
+              color: #658094;
+              font-size: 12px;
+              line-height: 1.4;
+            }
+            .status {
+              display: inline-flex;
+              width: fit-content;
+              padding: 6px 9px;
+              border-radius: 999px;
+              font-size: 12px;
+              font-weight: 900;
+            }
+            .status-pending { background: #fff1dd; color: #e36800; }
+            .status-in_progress { background: #dff3ef; color: #117b82; }
+            .status-completed { background: #dff3ef; color: #0f6f57; }
+            .status-cancelled { background: #fce8e6; color: #c5221f; }
+            .task-progress {
+              height: 8px;
+              width: 130px;
+              background: #efe8d4;
+              border-radius: 999px;
+              overflow: hidden;
+              margin-bottom: 6px;
+            }
+            .task-progress div {
+              height: 100%;
+              background: linear-gradient(90deg, #2aa2a5, #ff8500);
+              border-radius: 999px;
+            }
+            small {
+              color: #658094;
+              font-size: 12px;
+              font-weight: 750;
+            }
+            .footer {
+              margin-top: 24px;
+              padding-top: 16px;
+              border-top: 1px solid #efe8d4;
+              display: flex;
+              justify-content: space-between;
+              gap: 16px;
+              color: #658094;
+              font-size: 12px;
+            }
+            .footer strong { color: #082f57; }
+            @media print {
+              body { background: #fff; }
+              .page {
+                width: 100%;
+                min-height: auto;
+                margin: 0;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+              }
+              .hero {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+              }
+              .metrics { margin-top: -38px; }
+            }
           </style>
         </head>
         <body>
-          <h1>${project.name}</h1>
-          <p>${project.description || 'Sin descripción'}</p>
-          <div class="summary">
-            <strong>Avance:</strong> ${summary.progress_percent}% |
-            <strong>Tareas:</strong> ${summary.completed_tasks}/${summary.total_tasks}
+          <div class="page">
+            <section class="hero">
+              <div>
+                <div class="brand"><span class="mark">TS</span> TechSolutions ERP</div>
+                <h1>${projectName}</h1>
+                <p class="description">${projectDescription}</p>
+              </div>
+              <div class="date-card">
+                <span>Reporte generado</span>
+                <strong>${generatedAt}</strong>
+              </div>
+            </section>
+
+            <main class="content">
+              <section class="metrics">
+                <article class="metric">
+                  <span>Avance general</span>
+                  <strong>${summary.progress_percent}%</strong>
+                  <div class="progress-track"><div class="progress-fill"></div></div>
+                </article>
+                <article class="metric">
+                  <span>Tareas finalizadas</span>
+                  <strong>${summary.completed_tasks}/${summary.total_tasks}</strong>
+                  <small>Seguimiento operativo</small>
+                </article>
+                <article class="metric">
+                  <span>Cliente</span>
+                <strong>${clientName}</strong>
+                  <small>Portal de avance</small>
+                </article>
+              </section>
+
+              <section class="project-meta">
+                <article>
+                  <span>Fecha de inicio</span>
+                  <strong>${escapeHtml(project.start_date || '-')}</strong>
+                </article>
+                <article>
+                  <span>Fecha de fin</span>
+                  <strong>${escapeHtml(project.end_date || '-')}</strong>
+                </article>
+                <article>
+                  <span>Estado del proyecto</span>
+                  <strong>${projectStatus}</strong>
+                </article>
+              </section>
+
+              <div class="section-title">
+                <div>
+                  <h2>Detalle de tareas</h2>
+                  <p>Responsables, estado actual y porcentaje de avance por actividad.</p>
+                </div>
+              </div>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th>Tarea</th>
+                    <th>Estado</th>
+                    <th>Empleado asignado</th>
+                    <th>Avance</th>
+                  </tr>
+                </thead>
+                <tbody>${rows || '<tr><td colspan="4">No hay tareas registradas.</td></tr>'}</tbody>
+              </table>
+
+              <footer class="footer">
+                <span><strong>TechSolutions ERP</strong> · Reporte de avance para clientes</span>
+                <span>Confidencial</span>
+              </footer>
+            </main>
           </div>
-          <table>
-            <thead><tr><th>Tarea</th><th>Estado</th><th>Empleado asignado</th><th>Avance</th></tr></thead>
-            <tbody>${rows}</tbody>
-          </table>
         </body>
       </html>
     `)
